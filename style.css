@@ -1,16 +1,13 @@
 .container {
     overflow-x:scroll;
+    height:95vh;
 }
 
 .column {
     border-left: 1px solid black;
     border-right: 1px solid black;
     min-height:100px;
-    /* max-width:14%; */
-}
-
-.table {
-    max-width:100%;
+    min-width:30%;
 }
 
 td, th {
@@ -22,7 +19,13 @@ td, th {
     border: 1px solid black;
     background-color: transparent;
     cursor:pointer;
-    /* padding:3px; */
+    height:60px;
+    overflow-y:hidden;
+    transition: height, 0.5s;
+}
+
+.order:hover {
+    height:80px;
 }
 
 .head {
