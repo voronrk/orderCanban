@@ -39,14 +39,13 @@ const addOrder = (currentElement) => {
    `;
 };
 
-const renderOrderCardSmall = (orderCard, orderData) => {
-   orderCard.classList.add('order');
-   orderCard.classList.add('is-size-7');
-   orderCard.draggable=true;
-   orderCard.id=`o${orderData['num']}`;
-   orderCard.innerHTML=`
-   <table class="table is-fullwidth is-bordered is-narrow">
-      <tr><th>№</th><th>Формат</th><th>Форм</th><th>Л/п</th><th>Время</th><th>Бумага</th></tr>
+const renderOrderCardSmall = (orderDay, orderData) => {
+   let orderRow=orderDay.appendChild(document.createElement('tr'));
+   // orderRow.classList.add('order');
+   // orderRow.classList.add('is-size-7');
+   orderRow.draggable=true;
+   orderRow.id=`o${orderData['num']}`;
+   orderRow.innerHTML=`
       <tr>
          <td>${orderData['num']}</td>
          <td>${orderData['size']}</td>
@@ -54,31 +53,34 @@ const renderOrderCardSmall = (orderCard, orderData) => {
          <td>${orderData['clicks']}</td>
          <td>${orderData['time']}</td>
          <td>${orderData['paper']}</td>
+         <td>${orderData['params']}</td>
+         <td>${orderData['customer']}</td>
       </tr>
-      <tr><td>Параметры</td><td colspan="5">${orderData['params']}</td></tr>
-      <tr><td>Заказчик</td><td colspan="5">${orderData['customer']}</td></tr>
-   </table>
    `;
 };
 
 body.addEventListener('drop', (event) => {
    event.stopPropagation();
    event.preventDefault();
-   console.log(event.target);
+   targetNode=event.target;
+   // console.log(targetNode);
    let data = event.dataTransfer.getData("Text");
-   if (event.target.id[0]=='c') {
-      event.target.appendChild(document.getElementById(data));
-   } else if (event.target.id[0]=='o') {
-      event.target.parentNode.insertBefore(document.getElementById(data), event.target);
-   } else if (event.target.parentNode.parentNode.parentNode.parentNode.id[0]=='o') {
-      console.log(event.target.parentNode.parentNode.parentNode.parentNode);
-      event.target.parentNode.parentNode.parentNode.parentNode.parentNode.insertBefore(document.getElementById(data), event.target.parentNode.parentNode.parentNode.parentNode);
+   if (targetNode.nodeName=='TH') {
+      console.log(targetNode.parentNode.parentNode);
+      targetNode.parentNode.parentNode.appendChild(document.getElementById(data));
+   } else if (targetNode.nodeName=='TD') {
+      console.log(targetNode.parentNode.parentNode);
+      console.log(targetNode);
+      targetNode.parentNode.parentNode.insertBefore(document.getElementById(data),targetNode.parentNode);
+   } else if (targetNode.id[0]=='c') {
+      console.log(targetNode.children[2]);
+      targetNode.children[2].appendChild(document.getElementById(data));
    };
    return false;
 });
 
 body.addEventListener('dragstart', (event) => {
-    console.log(event);
+   //  console.log(event);
     event.dataTransfer.effectAllowed='move';
     event.dataTransfer.setData("Text", event.target.getAttribute('id'));  
     event.dataTransfer.setDragImage(event.target,100,100);
@@ -91,12 +93,14 @@ body.addEventListener('click', (event) => {
       addOrder(target);
    };
    if (target.id=='save-button') {
-      console.log(target.parentNode.parentNode);
+      console.log(target.parentNode.parentNode.parentNode);
       for (let i=0; i<=7; i++) {
          orderData[target.parentNode.parentNode.children[i].id]=target.parentNode.parentNode.children[i].value;
       };
       
       console.log(orderData);
-      renderOrderCardSmall(target.parentNode.parentNode, orderData);
+      renderOrderCardSmall(target.parentNode.parentNode.previousElementSibling, orderData);
+      target.parentNode.parentNode.parentNode.removeChild(target.parentNode.parentNode);
+      
    }
 });
