@@ -1,108 +1,61 @@
 'use sctrict';
 
-import PostpressItem from "./PostressItem.js";
+import Week from "./Week.js";
 
-let orderData={};
+const container=document.querySelector('.container');
+let daysOfWeek = ['Понедельник', 'Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье'];
+let dates = ['22.11.2021','23.11.2021','24.11.2021','25.11.2021','26.11.2021','27.11.2021','28.11.2021'];
+let titles = ['№','Время','Заказчик','Параметры заказа'];
 
-const body=document.querySelector('body');
+let testOrders = [
+   {  dayOfWeek: daysOfWeek[0],
+      date: dates[0],
+      orders: [
+         {orderNum: '3355', customer:'Детотрюн',duration:'1',options:'Матовая пленка'},      
+         {orderNum: '3355', customer:'Детотрюн',duration:'1',options:'Глянцевая пленка'},      
+         {orderNum: '3355', customer:'Детотрюн',duration:'1',options:'Голографическая пленка'}      
+      ]
+   },
+   {  dayOfWeek: daysOfWeek[1],
+      date: dates[1],
+      orders: [
+         {orderNum: '3355', customer:'Детотрюн',duration:'1',options:'Матовая пленка'}      
+      ]
+   },
+   {  dayOfWeek: daysOfWeek[2],
+      date: dates[2],
+      orders: [
+         {orderNum: '3355', customer:'Детотрюн',duration:'1',options:'Матовая пленка'}      
+      ]
+   },
+   {  dayOfWeek: daysOfWeek[3],
+      date: dates[3],
+      orders: [
+         {orderNum: '3355', customer:'Детотрюн',duration:'1',options:'Матовая пленка'}      
+      ]
+   },
+   {  dayOfWeek: daysOfWeek[4],
+      date: dates[4],
+      orders: [
+         {orderNum: '3355', customer:'Детотрюн',duration:'1',options:'Матовая пленка'}      
+      ]
+   },
+   {  dayOfWeek: daysOfWeek[5],
+      date: dates[5],
+      orders: [
+         {orderNum: '3355', customer:'Детотрюн',duration:'1',options:'Матовая пленка'}      
+      ]
+   },
+   {  dayOfWeek: daysOfWeek[6],
+      date: dates[6],
+      orders: [
+         {orderNum: '3355', customer:'Детотрюн',duration:'1',options:'Матовая пленка'}      
+      ]
+   }   
+];
 
-let a = new PostpressItem({orderNum: '3355', customer:'Детотрюн',duration:'8',options:'Матовая пленка'});
-document.querySelector('#c1').appendChild(a.view);
+let newWeek = new Week(titles, testOrders);
+container.appendChild(newWeek.view);
 
-body.addEventListener('dragenter', (event) => {
-   event.preventDefault();
-   return true;
-});
-
-body.addEventListener('dragover', (event) => {
-    event.preventDefault();
-});
-
-body.addEventListener('dragdrop', (event) => {
-   event.preventDefault();
-});
-
-const addOrder = (currentElement) => {
-   let newOrder=currentElement.parentNode.appendChild(document.createElement('div'));
-   // newOrder.classList.add('order');
-   newOrder.classList.add('is-size-7');
-   // newOrder.id='o11';
-   newOrder.draggable="true";
-   newOrder.innerHTML=`
-      <input class="input is-small" type="text" id="num" placeholder="Номер заказа" focus>
-      <input class="input is-small" type="text" id="customer" placeholder="Заказчик">
-      <input class="input is-small" type="text" id="params" placeholder="Параметры заказа">
-      <input class="input is-small" type="text" id="paper" placeholder="Бумага">
-      <input class="input is-small" type="text" id="size" placeholder="Формат">
-      <input class="input is-small" type="text" id="plates" placeholder="Кол-во форм">
-      <input class="input is-small" type="text" id="clicks" placeholder="Кол-во листопрогонов">
-      <input class="input is-small" type="time" id="time" placeholder="Время план.">
-      <div class="buttons are-small">
-         <button class="button" id="save-button">Сохранить</button>
-         <button class="button" id="cancel-button">Отмена</button>
-      </div>
-   `;
-};
-
-const renderOrderCardSmall = (orderDay, orderData) => {
-   let orderRow=orderDay.appendChild(document.createElement('div'));
-   orderRow.classList.add('columns');
-   orderRow.classList.add('is-gapless');
-   orderRow.draggable=true;
-   orderRow.id=`o${orderData['num']}`;
-   orderRow.innerHTML=`
-      <div class="column column-order has-text-centered is-size-7 is-1">${orderData['num']}</div>
-      <div class="column column-order has-text-centered is-size-7 is-1">${orderData['size']}</div>
-      <div class="column column-order has-text-centered is-size-7 is-1">${orderData['plates']}</div>
-      <div class="column column-order has-text-centered is-size-7 is-1">${orderData['clicks']}</div>
-      <div class="column column-order has-text-centered is-size-7 is-1">${orderData['time']}</div>
-      <div class="column column-order has-text-centered is-size-7 is-2">${orderData['paper']}</div>
-      <div class="column column-order has-text-centered is-size-7 is-3">${orderData['params']}</div>
-      <div class="column column-order has-text-centered is-size-7 is-2">${orderData['customer']}</div>
-   `;
-};
-
-body.addEventListener('drop', (event) => {
-   event.stopPropagation();
-   event.preventDefault();
-   targetNode=event.target;
-   // console.log(targetNode);
-   let data = event.dataTransfer.getData("Text");
-   if (targetNode.nodeName=='TH') {
-      console.log(targetNode.parentNode.parentNode);
-      targetNode.parentNode.parentNode.appendChild(document.getElementById(data));
-   } else if (targetNode.nodeName=='TD') {
-      console.log(targetNode.parentNode.parentNode);
-      console.log(targetNode);
-      targetNode.parentNode.parentNode.insertBefore(document.getElementById(data),targetNode.parentNode);
-   } else if (targetNode.id[0]=='c') {
-      console.log(targetNode.children[2]);
-      targetNode.children[2].appendChild(document.getElementById(data));
-   };
-   return false;
-});
-
-body.addEventListener('dragstart', (event) => {
-   //  console.log(event);
-    event.dataTransfer.effectAllowed='move';
-    event.dataTransfer.setData("Text", event.target.getAttribute('id'));  
-    event.dataTransfer.setDragImage(event.target,100,100);
-    return true;
-});
-
-body.addEventListener('click', (event) => {
-   const target=event.target;
-   if (target.className.indexOf('order-add')>0) {
-      addOrder(target);
-   };
-   if (target.id=='save-button') {
-      console.log(target.parentNode.parentNode.parentNode);
-      for (let i=0; i<=7; i++) {
-         orderData[target.parentNode.parentNode.children[i].id]=target.parentNode.parentNode.children[i].value;
-      };
-      
-      console.log(orderData);
-      renderOrderCardSmall(target.parentNode.parentNode.parentNode, orderData);
-      target.parentNode.parentNode.parentNode.removeChild(target.parentNode.parentNode);
-   }
-});
+let newWeek2 = new Week(titles, testOrders);
+container.appendChild(newWeek2.view);
