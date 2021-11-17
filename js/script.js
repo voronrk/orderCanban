@@ -1,8 +1,13 @@
 'use sctrict';
 
+import PostpressItem from "./PostressItem.js";
+
 let orderData={};
 
 const body=document.querySelector('body');
+
+let a = new PostpressItem({orderNum: '3355', customer:'Детотрюн',duration:'8',options:'Матовая пленка'});
+document.querySelector('#c1').appendChild(a.view);
 
 body.addEventListener('dragenter', (event) => {
    event.preventDefault();
@@ -40,22 +45,20 @@ const addOrder = (currentElement) => {
 };
 
 const renderOrderCardSmall = (orderDay, orderData) => {
-   let orderRow=orderDay.appendChild(document.createElement('tr'));
-   // orderRow.classList.add('order');
-   // orderRow.classList.add('is-size-7');
+   let orderRow=orderDay.appendChild(document.createElement('div'));
+   orderRow.classList.add('columns');
+   orderRow.classList.add('is-gapless');
    orderRow.draggable=true;
    orderRow.id=`o${orderData['num']}`;
    orderRow.innerHTML=`
-      <tr>
-         <td>${orderData['num']}</td>
-         <td>${orderData['size']}</td>
-         <td>${orderData['plates']}</td>
-         <td>${orderData['clicks']}</td>
-         <td>${orderData['time']}</td>
-         <td>${orderData['paper']}</td>
-         <td>${orderData['params']}</td>
-         <td>${orderData['customer']}</td>
-      </tr>
+      <div class="column column-order has-text-centered is-size-7 is-1">${orderData['num']}</div>
+      <div class="column column-order has-text-centered is-size-7 is-1">${orderData['size']}</div>
+      <div class="column column-order has-text-centered is-size-7 is-1">${orderData['plates']}</div>
+      <div class="column column-order has-text-centered is-size-7 is-1">${orderData['clicks']}</div>
+      <div class="column column-order has-text-centered is-size-7 is-1">${orderData['time']}</div>
+      <div class="column column-order has-text-centered is-size-7 is-2">${orderData['paper']}</div>
+      <div class="column column-order has-text-centered is-size-7 is-3">${orderData['params']}</div>
+      <div class="column column-order has-text-centered is-size-7 is-2">${orderData['customer']}</div>
    `;
 };
 
@@ -99,8 +102,7 @@ body.addEventListener('click', (event) => {
       };
       
       console.log(orderData);
-      renderOrderCardSmall(target.parentNode.parentNode.previousElementSibling, orderData);
+      renderOrderCardSmall(target.parentNode.parentNode.parentNode, orderData);
       target.parentNode.parentNode.parentNode.removeChild(target.parentNode.parentNode);
-      
    }
 });
