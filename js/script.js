@@ -24,5 +24,5 @@ let currentOrder = workData[0];
 do {
    let newWeek = new Week(beginDate, titles, currentOrder);
    container.appendChild(newWeek.view);
-   currentOrder = currentOrder.nextOrder;
+   currentOrder = newWeek.nextOrder;
 } while (currentOrder);
