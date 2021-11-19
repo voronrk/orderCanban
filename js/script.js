@@ -5,12 +5,7 @@ import {testOrders as workData} from "./testOrders.js";
 
 const container=document.querySelector('.container');
 const titles = ['№','Время','Заказчик','Параметры заказа'];
-const beginDate = new Date(2021,9,30);
-// console.log(beginDate);
-
-// workData[0]['previousOrder'] = null;
-// workData[workData.length-1]['nextOrder'] = null;
-
+const beginDate = new Date(2021,9,21);
 
 for (let i in workData) {
    if (i == 0) {
@@ -25,8 +20,9 @@ for (let i in workData) {
 };
 console.log(workData);
 
-let newWeek = new Week(beginDate, titles, workData[0]);
-container.appendChild(newWeek.view);
-
-// let newWeek2 = new Week(titles, workData);
-// container.appendChild(newWeek2.view);
+let currentOrder = workData[0];
+do {
+   let newWeek = new Week(beginDate, titles, currentOrder);
+   container.appendChild(newWeek.view);
+   currentOrder = currentOrder.nextOrder;
+} while (currentOrder);
