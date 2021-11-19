@@ -17,10 +17,9 @@ export default class PostpressItem extends OrderItem {
 
     constructor(data) {
         super(data);
-        this.view.innerHTML = `${this.duration}${this.orderNum}${this.customer}${this.options}`;
+        this.view.innerHTML = `${this.orderNum}${this.duration}${this.customer}${this.options}`;
 
-        this.view.addEventListener('dragenter', () => {
-            console.log(this.view);
-        })
+        
+        
     }
 }

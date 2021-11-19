@@ -1,16 +1,25 @@
-import PostpressItem from "./PostressItem.js";
+import PostpressItem from "./PostpressItem.js";
 
 export default class Day {
 
-    constructor(titles, dayOfWeek, date, orders=[]) {
-        this.orders = orders;
+    workHoursCountMax = 8;
+    workHoursCount = 0;
+
+    renderDate() {
+        let day = this.date.getDate()<10 ? `0${this.date.getDate()}` : this.date.getDate();
+        let mounth = this.date.getMonth()<9 ? `0${this.date.getMonth()+1}` : this.date.getMonth()+1;
+        let year = this.date.getFullYear()
+        return `${day}.${mounth}.${year}`;
+    }
+
+    constructor(titles, dayOfWeek, date, order) {
+        // this.orders = orders;
         this.dayOfWeek = dayOfWeek;
         this.date = date;
-        this.orders = orders;
 
         this.view = document.createElement('div');
         this.view.classList.add('column', 'column-day');
-        this.view.innerHTML = `<div class="head"><div>${this.dayOfWeek}</div><div>${this.date}</div></div>`;
+        this.view.innerHTML = `<div class="head"><div>${this.dayOfWeek}</div><div>${this.renderDate()}</div></div>`;
 
         let headAddOrder = document.createElement('div');
         headAddOrder.classList.add('head','order-add');
@@ -31,9 +40,46 @@ export default class Day {
         `;
         this.view.appendChild(headTableHeader);
 
-        this.orders.forEach(order => {
-            let newOrder = new PostpressItem(order);
-            this.view.appendChild(newOrder.view);
-        });
+        if (order!=null) {
+            do {
+                this.workHoursCount += parseInt(order['duration']);
+                if (this.workHoursCount > this.workHoursCountMax) {
+                    let continueOrder = Object.assign({}, order);
+                    continueOrder['previousOrder'] = order;
+                    continueOrder['nextOrder'] = order['nextOrder'];
+                    order['nextOrder']['previousOrder'] = continueOrder;
+                    order['nextOrder'] = continueOrder;
+                    order['duration'] -= this.workHoursCount - this.workHoursCountMax;
+                    continueOrder['duration'] -= order['duration'];
+                    this.workHoursCount = this.workHoursCountMax;
+                };
+                let newOrder = new PostpressItem(order);
+                this.view.appendChild(newOrder.view);
+                order = order['nextOrder'];
+            } while ((order!=null) && (this.workHoursCount < this.workHoursCountMax));
+            this.nextOrder = order;
+        };
+
+        let tableFooter = document.createElement('div');
+        tableFooter.classList.add('columns','is-gapless','has-text-weight-bold');
+        tableFooter.innerHTML = `
+            <div class="column column-order has-text-centered is-size-6 is-1"></div>
+            <div class="column column-order has-text-centered is-size-6 is-1">${this.workHoursCount}</div>
+            <div class="column column-order has-text-centered is-size-6 is-10">${this.workHoursCountMax} часов</div>
+        `;
+        this.view.appendChild(tableFooter);
+
+        this.view.addEventListener('dragover', (event)=> {
+            event.preventDefault();
+        },false);
+
+        this.view.addEventListener('drop', (event) => {
+            event.preventDefault();
+            let node = document.querySelector('#dragging');
+            node.id = '';
+            if (event.target.classList.contains('column-day')) {
+                this.view.appendChild(node);
+            };            
+        })
     };
 }

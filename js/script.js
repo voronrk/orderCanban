@@ -1,61 +1,32 @@
 'use sctrict';
 
 import Week from "./Week.js";
+import {testOrders as workData} from "./testOrders.js";
 
 const container=document.querySelector('.container');
-let daysOfWeek = ['Понедельник', 'Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье'];
-let dates = ['22.11.2021','23.11.2021','24.11.2021','25.11.2021','26.11.2021','27.11.2021','28.11.2021'];
-let titles = ['№','Время','Заказчик','Параметры заказа'];
+const titles = ['№','Время','Заказчик','Параметры заказа'];
+const beginDate = new Date(2021,9,30);
+// console.log(beginDate);
 
-let testOrders = [
-   {  dayOfWeek: daysOfWeek[0],
-      date: dates[0],
-      orders: [
-         {orderNum: '3355', customer:'Детотрюн',duration:'1',options:'Матовая пленка'},      
-         {orderNum: '3355', customer:'Детотрюн',duration:'1',options:'Глянцевая пленка'},      
-         {orderNum: '3355', customer:'Детотрюн',duration:'1',options:'Голографическая пленка'}      
-      ]
-   },
-   {  dayOfWeek: daysOfWeek[1],
-      date: dates[1],
-      orders: [
-         {orderNum: '3355', customer:'Детотрюн',duration:'1',options:'Матовая пленка'}      
-      ]
-   },
-   {  dayOfWeek: daysOfWeek[2],
-      date: dates[2],
-      orders: [
-         {orderNum: '3355', customer:'Детотрюн',duration:'1',options:'Матовая пленка'}      
-      ]
-   },
-   {  dayOfWeek: daysOfWeek[3],
-      date: dates[3],
-      orders: [
-         {orderNum: '3355', customer:'Детотрюн',duration:'1',options:'Матовая пленка'}      
-      ]
-   },
-   {  dayOfWeek: daysOfWeek[4],
-      date: dates[4],
-      orders: [
-         {orderNum: '3355', customer:'Детотрюн',duration:'1',options:'Матовая пленка'}      
-      ]
-   },
-   {  dayOfWeek: daysOfWeek[5],
-      date: dates[5],
-      orders: [
-         {orderNum: '3355', customer:'Детотрюн',duration:'1',options:'Матовая пленка'}      
-      ]
-   },
-   {  dayOfWeek: daysOfWeek[6],
-      date: dates[6],
-      orders: [
-         {orderNum: '3355', customer:'Детотрюн',duration:'1',options:'Матовая пленка'}      
-      ]
-   }   
-];
+// workData[0]['previousOrder'] = null;
+// workData[workData.length-1]['nextOrder'] = null;
 
-let newWeek = new Week(titles, testOrders);
+
+for (let i in workData) {
+   if (i == 0) {
+      workData[i]['previousOrder'] = null;
+   } else {
+      workData[i]['previousOrder'] = workData[i-1];
+      workData[i-1]['nextOrder']=workData[i];
+   };
+   if (i == (workData.length-1)) {
+      workData[i]['nextOrder'] = null;
+   };
+};
+console.log(workData);
+
+let newWeek = new Week(beginDate, titles, workData[0]);
 container.appendChild(newWeek.view);
 
-let newWeek2 = new Week(titles, testOrders);
-container.appendChild(newWeek2.view);
+// let newWeek2 = new Week(titles, workData);
+// container.appendChild(newWeek2.view);
