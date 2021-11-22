@@ -10,8 +10,11 @@ export default class OrderItem {
             event.target.classList.add('dragged');
             event.target.id = 'dragging';
             event.dataTransfer.setData("text", event.target.id);
-            event.dataTransfer.setDragImage(event.target,100,100);
-            // setTimeout(() => event.target.classList.add('is-hidden'), 0);
+            setTimeout(() => event.target.classList.add('is-hidden'), 0);
+            this.data['previousOrder']['nextOrder'] = this.data['nextOrder'];
+            this.data['previousOrder'] = null;
+            this.data['nextOrder'] = null;
+
             
         });
         this.view.addEventListener('dragend', (event) => {

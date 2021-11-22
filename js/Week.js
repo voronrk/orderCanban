@@ -9,7 +9,6 @@ export default class Week {
         this.view = document.createElement('div');
         this.view.classList.add('columns','is-gapless','week');
         let currentOrder = order;
-        console.log(firstDate);
         for (let i=0; i < 7; i++) {
             firstDate.setDate(firstDate.getDate()+1);
             let newDay = new Day(titles, this.daysOfWeek[i], firstDate, currentOrder);

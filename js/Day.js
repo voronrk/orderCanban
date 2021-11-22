@@ -2,8 +2,19 @@ import PostpressItem from "./PostpressItem.js";
 
 export default class Day {
 
-    workHoursCountMax = 8;
-    workHoursCount = 0;
+    workHoursCountMax = 9;
+
+    get workHoursCount() {
+        let duration = 0;
+        if (this.orders.length>0) {
+            this.orders.forEach((order) => {
+                duration += +order['duration'];
+            });
+        };
+        return duration;
+    }
+
+    orders = [];
 
     renderDate() {
         let day = this.date.getDate()<10 ? `0${this.date.getDate()}` : this.date.getDate();
@@ -13,7 +24,6 @@ export default class Day {
     }
 
     constructor(titles, dayOfWeek, date, order) {
-        // this.orders = orders;
         this.dayOfWeek = dayOfWeek;
         this.date = date;
 
@@ -42,22 +52,26 @@ export default class Day {
 
         if (order!=null) {
             do {
-                this.workHoursCount += parseInt(order['duration']);
+                this.orders.push(order);
                 if (this.workHoursCount > this.workHoursCountMax) {
+                    console.log('yea');
                     let continueOrder = Object.assign({}, order);
                     continueOrder['previousOrder'] = order;
                     continueOrder['nextOrder'] = order['nextOrder'];
                     order['nextOrder']['previousOrder'] = continueOrder;
                     order['nextOrder'] = continueOrder;
-                    order['duration'] -= this.workHoursCount - this.workHoursCountMax;
+                    order['duration'] -= (this.workHoursCount - this.workHoursCountMax);
                     continueOrder['duration'] -= order['duration'];
-                    this.workHoursCount = this.workHoursCountMax;
+                    // debugger;
+                    // // this.workHoursCount = this.workHoursCountMax;
                 };
+                console.log(this.workHoursCount);
                 let newOrder = new PostpressItem(order);
                 this.view.appendChild(newOrder.view);
                 order = order['nextOrder'];
             } while ((order!=null) && (this.workHoursCount < this.workHoursCountMax));
             this.nextOrder = order;
+            console.log(this.orders);
         };
 
         let tableFooter = document.createElement('div');
