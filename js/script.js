@@ -1,6 +1,6 @@
 'use sctrict';
 
-import Week from "./Week.js";
+import WorkArea from "./WorkArea.js";
 import {testOrders as workData} from "./testOrders.js";
 
 const container=document.querySelector('.container');
@@ -18,11 +18,18 @@ for (let i in workData) {
       workData[i]['nextOrder'] = null;
    };
 };
-console.log(workData);
 
-let currentOrder = workData[0];
-do {
-   let newWeek = new Week(beginDate, titles, currentOrder);
-   container.appendChild(newWeek.view);
-   currentOrder = newWeek.nextOrder;
-} while (currentOrder);
+
+var workArea = new WorkArea(beginDate, titles, workData[0]);
+container.appendChild(workArea.view);
+
+
+
+//==============================debug===========================
+document.addEventListener('keyup', (event) => {
+   if (event.key=='PrintScreen') {
+      console.log('update');
+      workArea.render();
+   }
+});
+//==============================================================

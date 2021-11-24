@@ -5,16 +5,20 @@ export default class Week {
     daysOfWeek = ['Понедельник', 'Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье'];
 
     constructor(firstDate, titles, order) {
-        this.firstDate = firstDate;
+        this.firstDate = new Date();
+        this.firstDate.setDate(this.firstDate.getDate());
         this.view = document.createElement('div');
         this.view.classList.add('columns','is-gapless','week');
+
         let currentOrder = order;
+        let currentDate = new Date();
         for (let i=0; i < 7; i++) {
-            firstDate.setDate(firstDate.getDate()+1);
-            let newDay = new Day(titles, this.daysOfWeek[i], firstDate, currentOrder);
+            currentDate.setDate(firstDate.getDate()+1*i);
+            let newDay = new Day(titles, this.daysOfWeek[i], currentDate, currentOrder);
             this.view.appendChild(newDay.view);
             currentOrder = newDay.nextOrder;
-        }
+        };
+        
         this.nextOrder = currentOrder ? currentOrder : null;
     }
 }

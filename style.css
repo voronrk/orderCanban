@@ -73,14 +73,14 @@ td, th {
     background-color:white;
     cursor:grab;
     /* cursor:-moz-grab; */
-    transition: all ease-in 1s;
+    transition: all ease-in 0.3s;
 }
 
 .order-row:active {
     cursor:grabbing;
 }
 
-.dragged {
+.dragging {
     border: 1px blue solid;
     background: rgba(0,0,255,0.2);
 }
