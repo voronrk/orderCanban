@@ -23,32 +23,31 @@ export default class OrderItem {
 
         this.view.addEventListener('dragstart', (event) => {
             event.target.classList.add('dragging');
-            // console.log(this.data);
-            // event.target.id = 'dragging';
-            // event.dataTransfer.setData("text", event.target.id);
             // setTimeout(() => event.target.classList.add('is-hidden'), 0);
             this.data['previousOrder']['nextOrder'] = this.data['nextOrder'];
-            this.data['previousOrder'] = null;
-            this.data['nextOrder'] = null;
-            localStorage.setItem('dragging', JSON.stringify(this.data));
+            // this.data['previousOrder'] = null;
+            // this.data['nextOrder'] = null;
+            globalThis.draggable = this.data;
+            console.log(globalThis.draggable);
         });
 
         this.view.addEventListener('dragend', (event) => {
             event.target.classList.add('is-hidden');
-            console.log(event);
         });
 
         this.view.addEventListener('drop', (event) => {
             event.preventDefault();
             event.stopPropagation();
-            let node = new PostpressItem(JSON.parse(localStorage.getItem('dragging')));
+            let node = new PostpressItem(globalThis.draggable);
             node.data['nextOrder'] = this.data;
             node.data['previousOrder'] = this.data['previousOrder'];
             this.data['previousOrder'] = node.data;
             node.data['previousOrder']['nextOrder'] = node.data;
             if (event.target.classList.contains('column-order')) {
                 event.target.parentNode.parentNode.insertBefore(node.view, event.target.parentNode);
-                localStorage.removeItem('dragging');
+                let orderEvent = new Event('orderMoved', {bubbles: true});
+                // let valueChangedEvent = new CustomEvent('valuechanged', {bubbles: true, detail: {value: event.target.value}});
+                node.view.dispatchEvent(orderEvent);
             };
             
         });

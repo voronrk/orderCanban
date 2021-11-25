@@ -6,6 +6,7 @@ import {testOrders as workData} from "./testOrders.js";
 const container=document.querySelector('.container');
 const titles = ['№','Время','Заказчик','Параметры заказа'];
 const beginDate = new Date(2021,9,21);
+let draggable = {};
 
 for (let i in workData) {
    if (i == 0) {
@@ -19,11 +20,8 @@ for (let i in workData) {
    };
 };
 
-
 var workArea = new WorkArea(beginDate, titles, workData[0]);
 container.appendChild(workArea.view);
-
-
 
 //==============================debug===========================
 document.addEventListener('keyup', (event) => {
