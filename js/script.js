@@ -2,32 +2,32 @@
 
 import WorkArea from "./WorkArea.js";
 import {testOrders as workData} from "./testOrders.js";
+import Orders from "./Orders.js";
 
 const container=document.querySelector('.container');
 const titles = ['№','Время','Заказчик','Параметры заказа'];
 const beginDate = new Date(2021,9,21);
 let draggable = {};
 
-for (let i in workData) {
-   if (i == 0) {
-      workData[i]['previousOrder'] = null;
-   } else {
-      workData[i]['previousOrder'] = workData[i-1];
-      workData[i-1]['nextOrder']=workData[i];
-   };
-   if (i == (workData.length-1)) {
-      workData[i]['nextOrder'] = null;
-   };
-};
+fetch('/js/testOrders.json')
+   .then((res) => res.json())
+   .then ((data) => {
+      let orders = new Orders(data);
+      let workArea = new WorkArea(beginDate, titles, orders);
+      container.appendChild(workArea.view);
 
-var workArea = new WorkArea(beginDate, titles, workData[0]);
-container.appendChild(workArea.view);
+      //==============================debug===========================
+      document.addEventListener('keyup', (event) => {
+         if (event.key=='PrintScreen') {
+            console.log('update');
+            workArea.render();
+         }
+      });
+      //==============================================================
+   });
 
-//==============================debug===========================
-document.addEventListener('keyup', (event) => {
-   if (event.key=='PrintScreen') {
-      console.log('update');
-      workArea.render();
-   }
-});
-//==============================================================
+// orders.moveBefore(orders.data[5], orders.data[0]);
+// orders.debug(orders.firstOrder());
+// console.log(orders.firstOrder());
+// console.log(orders.lastOrder());
+

@@ -3,7 +3,6 @@ import Week from "./Week.js";
 export default class WorkArea {
 
     render() {
-       console.log('render');
        this.view.innerHTML = '';
        let currentOrder = this.firstOrder;
        do {
@@ -14,15 +13,15 @@ export default class WorkArea {
        return
     }
  
-    constructor(beginDate, titles, firstOrder) {
-       this.beginDate = beginDate;
-       this.titles = titles;
-       this.firstOrder = firstOrder;
-       this.view = document.createElement('div');
-       document.addEventListener('orderMoved', () => {
-         console.log('event');
+    constructor(beginDate, titles, orders) {
+      console.log(orders['data']);
+      this.beginDate = beginDate;
+      this.titles = titles;
+      this.firstOrder = orders.firstOrder();
+      this.view = document.createElement('div');
+      this.render();
+      document.addEventListener('orderMoved', () => {
          this.render()
       });
-       this.render();
     }
  };

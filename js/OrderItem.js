@@ -25,8 +25,6 @@ export default class OrderItem {
             event.target.classList.add('dragging');
             // setTimeout(() => event.target.classList.add('is-hidden'), 0);
             this.data['previousOrder']['nextOrder'] = this.data['nextOrder'];
-            // this.data['previousOrder'] = null;
-            // this.data['nextOrder'] = null;
             globalThis.draggable = this.data;
             console.log(globalThis.draggable);
         });
@@ -39,6 +37,7 @@ export default class OrderItem {
             event.preventDefault();
             event.stopPropagation();
             let node = new PostpressItem(globalThis.draggable);
+            
             node.data['nextOrder'] = this.data;
             node.data['previousOrder'] = this.data['previousOrder'];
             this.data['previousOrder'] = node.data;
@@ -46,10 +45,8 @@ export default class OrderItem {
             if (event.target.classList.contains('column-order')) {
                 event.target.parentNode.parentNode.insertBefore(node.view, event.target.parentNode);
                 let orderEvent = new Event('orderMoved', {bubbles: true});
-                // let valueChangedEvent = new CustomEvent('valuechanged', {bubbles: true, detail: {value: event.target.value}});
                 node.view.dispatchEvent(orderEvent);
             };
-            
         });
     }
 }

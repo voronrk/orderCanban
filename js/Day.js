@@ -97,10 +97,11 @@ export default class Day {
 
         this.view.addEventListener('drop', (event) => {
             event.preventDefault();
-            let node = new PostpressItem(JSON.parse(localStorage.getItem('dragging')));
+            let node = new PostpressItem(globalThis.draggable);
             if (event.target.closest('.column-day')) {
                 this.tableBody.appendChild(node.view);
-                localStorage.removeItem('dragging');
+                let orderEvent = new Event('orderMoved', {bubbles: true});
+                node.view.dispatchEvent(orderEvent);
             };
         });
 
