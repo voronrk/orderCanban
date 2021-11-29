@@ -4,9 +4,10 @@ export default class WorkArea {
 
     render() {
        this.view.innerHTML = '';
-       let currentOrder = this.firstOrder;
+       let currentOrder = this.orders.firstOrder();
+      //  let currentOrder = this.firstOrder;
        do {
-          let newWeek = new Week(this.beginDate, this.titles, currentOrder);
+          let newWeek = new Week(this.beginDate, this.titles, currentOrder, this.orders);
           this.view.appendChild(newWeek.view);
           currentOrder = newWeek.nextOrder;
        } while (currentOrder);
@@ -14,10 +15,10 @@ export default class WorkArea {
     }
  
     constructor(beginDate, titles, orders) {
-      console.log(orders['data']);
       this.beginDate = beginDate;
       this.titles = titles;
-      this.firstOrder = orders.firstOrder();
+      // this.firstOrder = orders.firstOrder();
+      this.orders = orders;
       this.view = document.createElement('div');
       this.render();
       document.addEventListener('orderMoved', () => {

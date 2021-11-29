@@ -13,6 +13,11 @@ export default class Orders {
         } while (order!=null);
     }
 
+    newOrder(order) {
+        this.data.push(order);
+        this.save();
+    }
+
     moveBefore(order, before) {
         order['previousOrder']['nextOrder'] = order['nextOrder'];
         order['nextOrder']['previousOrder'] = order['previousOrder'];
@@ -66,39 +71,34 @@ export default class Orders {
     lastOrder() {
         return this.data.filter(order => {return order['nextOrder']===null})[0];
     };
+    
+    getOrderById(id) {
+        if (id) {
+            return this.data.filter(order => {return order['id']==id})[0];
+        } else {
+            return null;
+        }
+    }
 
-    // async getData() {
-    //     const res = await fetch('/js/testOrders.json');
-    //     const data = await res.json();
-    //     return data;
-    // }
+    save() {
+        let dataForSave = [];
+        this.data.forEach((item) => {
+            let order = Object.assign({}, item);
+            order['previousOrder'] = order['previousOrder'] ? order['previousOrder']['id'] : null;
+            order['nextOrder'] = order['nextOrder'] ? order['nextOrder']['id'] : null;
+            order['date'] = order['date'] ? String(order['date']) : null;
+            dataForSave.push(order);
+        });
+        localStorage.setItem('orders', JSON.stringify(dataForSave));
+    }
 
     constructor (data) {
-        for (let i in data) {
-            this.data.push(data[i]);
-            if (i == 0) {
-            this.data[i]['previousOrder'] = null;
-            } else {
-            this.data[i]['previousOrder'] = this.data[i-1];
-            this.data[i-1]['nextOrder']=this.data[i];
-            };
-        };
-        console.log(this.data);
-        // this.debug(this.firstOrder());
+        data.forEach(order => this.data.push(order));
+
+        this.data.forEach(order => {
+            order['previousOrder'] = this.getOrderById(order['previousOrder']);
+            order['nextOrder'] = this.getOrderById(order['nextOrder']);
+            order['date'] = typeof(order['date'])=='object' ? order['date'] : order['date'] ? new Date(order['date']) : null;
+        });
     };
-    // constructor (){
-    //     this.getData().then(data => {
-    //         for (let i in data) {
-    //             this.data.push(data[i]);
-    //             if (i == 0) {
-    //             this.data[i]['previousOrder'] = null;
-    //             } else {
-    //             this.data[i]['previousOrder'] = this.data[i-1];
-    //             this.data[i-1]['nextOrder']=this.data[i];
-    //             };
-    //         };
-    //         console.log(this.data);
-    //         // this.debug(this.firstOrder());
-    //     });
-    // };
 };

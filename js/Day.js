@@ -6,15 +6,15 @@ export default class Day {
 
     get workHoursCount() {
         let duration = 0;
-        if (this.orders.length>0) {
-            this.orders.forEach((order) => {
+        if (this.daysOrders.length>0) {
+            this.daysOrders.forEach((order) => {
                 duration += +order['duration'];
             });
         };
         return duration;
     }
 
-    orders = [];
+    daysOrders = [];
 
     _renderDate() {
         let day = this.date.getDate()<10 ? `0${this.date.getDate()}` : this.date.getDate();
@@ -50,15 +50,19 @@ export default class Day {
         let tableBody = document.createElement('div');
         if (order!=null) {
             do {
-                this.orders.push(order);
+                // console.log(this.date);
+                order['date'] = this.date;
+                this.daysOrders.push(order);
                 if (this.workHoursCount > this.workHoursCountMax) {
                     let continueOrder = Object.assign({}, order);
+                    continueOrder['id'] = `${order['id']}-1`;
                     continueOrder['previousOrder'] = order;
                     continueOrder['nextOrder'] = order['nextOrder'];
                     order['nextOrder']['previousOrder'] = continueOrder;
                     order['nextOrder'] = continueOrder;
                     order['duration'] -= (this.workHoursCount - this.workHoursCountMax);
                     continueOrder['duration'] -= order['duration'];
+                    this.orders.newOrder(continueOrder);
                 };
                 let newOrder = new PostpressItem(order);
                 tableBody.appendChild(newOrder.view);
@@ -69,10 +73,11 @@ export default class Day {
         return tableBody;
     }
 
-    constructor(titles, dayOfWeek, date, order) {
+    constructor(titles, dayOfWeek, date, order, orders) {
         this.dayOfWeek = dayOfWeek;
         this.date = date;
         this.titles = titles;
+        this.orders = orders;
 
         this.view = document.createElement('div');
         this.view.classList.add('column', 'column-day');

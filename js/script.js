@@ -12,22 +12,18 @@ let draggable = {};
 fetch('/js/testOrders.json')
    .then((res) => res.json())
    .then ((data) => {
+      // data = JSON.parse(localStorage.getItem('orders'));
       let orders = new Orders(data);
       let workArea = new WorkArea(beginDate, titles, orders);
       container.appendChild(workArea.view);
+      orders.save();
+      console.log(orders);
 
       //==============================debug===========================
       document.addEventListener('keyup', (event) => {
          if (event.key=='PrintScreen') {
-            console.log('update');
-            workArea.render();
+            console.log(orders.debug(orders.firstOrder()));
          }
       });
       //==============================================================
    });
-
-// orders.moveBefore(orders.data[5], orders.data[0]);
-// orders.debug(orders.firstOrder());
-// console.log(orders.firstOrder());
-// console.log(orders.lastOrder());
-
