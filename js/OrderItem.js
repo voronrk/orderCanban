@@ -11,6 +11,19 @@ export default class OrderItem {
         return null;
     };
 
+    update(key, value){
+        this[key] = value;
+        if ((key=='previousOrder') || (key=='nextOrder')) {
+            this.data[key] = value ? value.data['id'] : null;
+        };
+        if (key=='date') {
+            this.data[key] = value ? value.toJSON() : value;
+        };        
+    };
+    updateData(key, value) {
+        this.data[key] = value;
+    };
+
     constructor(data={}) {
         this.data = data;
         this.view = document.createElement('div');
@@ -18,12 +31,11 @@ export default class OrderItem {
         this.view.draggable=true;
 
         //=============for debug=================
-        this.view.addEventListener('click', ()=> console.log(this.data));
+        this.view.addEventListener('click', ()=> console.log(this));
         //=======================================
 
         this.view.addEventListener('dragstart', (event) => {
             event.target.classList.add('dragging');
-            // setTimeout(() => event.target.classList.add('is-hidden'), 0);
             this.data['previousOrder']['nextOrder'] = this.data['nextOrder'];
             globalThis.draggable = this.data;
             console.log(globalThis.draggable);

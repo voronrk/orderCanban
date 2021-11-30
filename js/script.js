@@ -6,7 +6,7 @@ import Orders from "./Orders.js";
 
 const container=document.querySelector('.container');
 const titles = ['№','Время','Заказчик','Параметры заказа'];
-const beginDate = new Date(2021,9,21);
+const beginDate = new Date("2021-11-21");
 let draggable = {};
 
 fetch('/js/testOrders.json')
@@ -16,8 +16,8 @@ fetch('/js/testOrders.json')
       let orders = new Orders(data);
       let workArea = new WorkArea(beginDate, titles, orders);
       container.appendChild(workArea.view);
-      orders.save();
-      console.log(orders);
+      // orders.save();
+      // console.log(orders);
 
       //==============================debug===========================
       document.addEventListener('keyup', (event) => {

@@ -8,7 +8,7 @@ export default class Day {
         let duration = 0;
         if (this.daysOrders.length>0) {
             this.daysOrders.forEach((order) => {
-                duration += +order['duration'];
+                duration += +order.data['duration'];
             });
         };
         return duration;
@@ -50,22 +50,21 @@ export default class Day {
         let tableBody = document.createElement('div');
         if (order!=null) {
             do {
-                // console.log(this.date);
                 order['date'] = this.date;
                 this.daysOrders.push(order);
                 if (this.workHoursCount > this.workHoursCountMax) {
-                    let continueOrder = Object.assign({}, order);
-                    continueOrder['id'] = `${order['id']}-1`;
-                    continueOrder['previousOrder'] = order;
-                    continueOrder['nextOrder'] = order['nextOrder'];
-                    order['nextOrder']['previousOrder'] = continueOrder;
-                    order['nextOrder'] = continueOrder;
-                    order['duration'] -= (this.workHoursCount - this.workHoursCountMax);
-                    continueOrder['duration'] -= order['duration'];
+                    let continueOrderData = Object.assign({}, order.data);
+                    let continueOrder = new PostpressItem(continueOrderData);
+                    continueOrder.updateData('id', `${order.data['id']}-1`);
+                    continueOrder.update('previousOrder', order);
+                    continueOrder.update('nextOrder', order['nextOrder']);
+                    order['nextOrder'].update('previousOrder', continueOrder);
+                    order.update('nextOrder', continueOrder);
+                    order.updateData('duration', order.data['duration']-(this.workHoursCount - this.workHoursCountMax));
+                    continueOrder.updateData('duration', continueOrder.data['duration']-order.data['duration']);
                     this.orders.newOrder(continueOrder);
                 };
-                let newOrder = new PostpressItem(order);
-                tableBody.appendChild(newOrder.view);
+                tableBody.appendChild(order.view);
                 order = order['nextOrder'];
             } while ((order!=null) && (this.workHoursCount < this.workHoursCountMax));
             this.nextOrder = order;

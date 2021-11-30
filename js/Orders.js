@@ -1,3 +1,5 @@
+import PostpressItem from "./PostpressItem.js";
+
 export default class Orders {
 
     data = [];
@@ -15,7 +17,7 @@ export default class Orders {
 
     newOrder(order) {
         this.data.push(order);
-        this.save();
+        // this.save();
     }
 
     moveBefore(order, before) {
@@ -74,7 +76,7 @@ export default class Orders {
     
     getOrderById(id) {
         if (id) {
-            return this.data.filter(order => {return order['id']==id})[0];
+            return this.data.filter(order => {return order.data['id']==id})[0];
         } else {
             return null;
         }
@@ -93,12 +95,13 @@ export default class Orders {
     }
 
     constructor (data) {
-        data.forEach(order => this.data.push(order));
+        data.forEach(order => this.data.push(new PostpressItem(order)));
+        console.log(this.data);
 
         this.data.forEach(order => {
-            order['previousOrder'] = this.getOrderById(order['previousOrder']);
-            order['nextOrder'] = this.getOrderById(order['nextOrder']);
-            order['date'] = typeof(order['date'])=='object' ? order['date'] : order['date'] ? new Date(order['date']) : null;
+            order.update("previousOrder", this.getOrderById(order.data['previousOrder']));
+            order.update("nextOrder", this.getOrderById(order.data['nextOrder']));
+            order.update("date", order.data['date']);
         });
     };
 };
