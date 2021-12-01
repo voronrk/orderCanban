@@ -17,7 +17,7 @@ export default class OrderItem {
     };
 
     updateData(key, value) {
-        if ((key=='previousOrder') || (key=='nextOrder')) {
+        if ((key=='previousOrder') || (key=='nextOrder') || (key=='previousPart') || (key=='nextPart')) {
             this.data[key] = value ? value.data['id'] : null;
         } else if (key=='date') {
             this.data[key] = value ? value.toJSON() : value;
@@ -39,9 +39,13 @@ export default class OrderItem {
 
         this.view.addEventListener('dragstart', (event) => {
             event.target.classList.add('dragging');
-            this['previousOrder'].update('nextOrder', this['nextOrder']);
+            // this['previousOrder'].update('nextOrder', this['nextOrder']);
             globalThis.draggable = this;
             console.log(globalThis.draggable);
+        });
+
+        this.view.addEventListener('dragend', (event) => {
+            event.target.classList.remove('dragging');
         });
 
         // this.view.addEventListener('dragenter', (event) => {
@@ -52,9 +56,12 @@ export default class OrderItem {
         // });
 
         this.view.addEventListener('drop', (event) => {
+            console.log(draggable);
             if (event.target.classList.contains('column-order')) {
                 event.preventDefault();
                 event.stopPropagation();
+                draggable['previousOrder'].update('nextOrder', draggable['nextOrder']);
+                draggable['nextOrder'].update('previousOrder', draggable['previousOrder']);
                 draggable.update('nextOrder', this);
                 draggable.update('previousOrder', this['previousOrder']);
                 this.update('previousOrder', draggable);

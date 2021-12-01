@@ -41,7 +41,8 @@ export default class Day {
             <div class="column column-order has-text-centered is-size-7 is-1">${this.titles[0]}</div>
             <div class="column column-order has-text-centered is-size-7 is-1">${this.titles[1]}</div>
             <div class="column column-order has-text-centered is-size-7 is-4">${this.titles[2]}</div>
-            <div class="column column-order has-text-centered is-size-7 is-6">${this.titles[3]}</div>
+            <div class="column column-order has-text-centered is-size-7 is-4">${this.titles[3]}</div>
+            <div class="column column-order has-text-centered is-size-7 is-2">${this.titles[4]}</div>
         `;
         return tableHeader;
     }
@@ -50,11 +51,13 @@ export default class Day {
         let tableBody = document.createElement('div');
         if (order!=null) {
             do {
-                order.update('date', this.date);
+                order.update('date', new Date(this.date.toJSON()));
                 this.daysOrders.push(order);
                 if (this.workHoursCount > this.workHoursCountMax) {
                     let continueOrderData = Object.assign({}, order.data);
                     let continueOrder = new PostpressItem(continueOrderData);
+                    continueOrder.update('previuousPart', order);
+                    order.update('nextPart', continueOrder);
                     continueOrder.updateData('id', `${order.data['id']}-1`);
                     continueOrder.update('previousOrder', order);
                     continueOrder.update('nextOrder', order['nextOrder']);

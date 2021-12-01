@@ -5,7 +5,7 @@ import {testOrders as workData} from "./testOrders.js";
 import Orders from "./Orders.js";
 
 const container=document.querySelector('.container');
-const titles = ['№','Время','Заказчик','Параметры заказа'];
+const titles = ['№','Время','Заказчик','Параметры заказа', 'Дата'];
 const beginDate = new Date("2021-11-21");
 let draggable = {};
 
