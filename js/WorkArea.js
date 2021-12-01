@@ -24,6 +24,7 @@ export default class WorkArea {
       this.render();
       document.addEventListener('orderMoved', () => {
          this.render()
+         orders.save();
       });
     }
  };

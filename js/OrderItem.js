@@ -63,7 +63,7 @@ export default class OrderItem {
                 draggable.update('previousOrder', this['previousOrder']);
                 this.update('previousOrder', draggable);
                 draggable['previousOrder'].update('nextOrder', draggable);
-                 let orderEvent = new Event('orderMoved', {bubbles: true});
+                let orderEvent = new Event('orderMoved', {bubbles: true});
                 draggable.view.dispatchEvent(orderEvent);
                 draggable.view.classList.remove('dragging');
             };

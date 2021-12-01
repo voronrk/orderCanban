@@ -12,7 +12,7 @@ let draggable = {};
 fetch('/js/testOrders.json')
    .then((res) => res.json())
    .then ((data) => {
-      // data = JSON.parse(localStorage.getItem('orders'));
+      data = JSON.parse(localStorage.getItem('orders'));
       let orders = new Orders(data);
       let workArea = new WorkArea(beginDate, titles, orders);
       container.appendChild(workArea.view);

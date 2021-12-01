@@ -82,15 +82,20 @@ export default class Orders {
         }
     }
 
+    getOrdersByDate(date) {
+        if (date) {
+            return this.data.filter(order => {return order['date'].toLocaleDateString()==date.toLocaleDateString()});
+        } else {
+            return this.data.filter(order => {return order['date']==null});
+        }
+    };
+
     save() {
         let dataForSave = [];
         this.data.forEach((item) => {
-            let order = Object.assign({}, item);
-            order['previousOrder'] = order['previousOrder'] ? order['previousOrder']['id'] : null;
-            order['nextOrder'] = order['nextOrder'] ? order['nextOrder']['id'] : null;
-            order['date'] = order['date'] ? String(order['date']) : null;
-            dataForSave.push(order);
+            dataForSave.push(item.data);
         });
+        console.log(dataForSave);
         localStorage.setItem('orders', JSON.stringify(dataForSave));
     }
 
@@ -101,7 +106,7 @@ export default class Orders {
         this.data.forEach(order => {
             order.update("previousOrder", this.getOrderById(order.data['previousOrder']));
             order.update("nextOrder", this.getOrderById(order.data['nextOrder']));
-            order.update("date", order.data['date']);
+            order.update("date", order.data['date'] ? new Date(order.data['date']) : null);
         });
     };
 };

@@ -2,7 +2,7 @@ import PostpressItem from "./PostpressItem.js";
 
 export default class Day {
 
-    workHoursCountMax = 9;
+    workHoursCountMax = 8;
 
     get workHoursCount() {
         let duration = 0;
@@ -17,10 +17,11 @@ export default class Day {
     daysOrders = [];
 
     _renderDate() {
-        let day = this.date.getDate()<10 ? `0${this.date.getDate()}` : this.date.getDate();
-        let mounth = this.date.getMonth()<9 ? `0${this.date.getMonth()+1}` : this.date.getMonth()+1;
-        let year = this.date.getFullYear()
-        return `${day}.${mounth}.${year}`;
+        return this.date.toLocaleDateString();
+        // let day = this.date.getDate()<10 ? `0${this.date.getDate()}` : this.date.getDate();
+        // let mounth = this.date.getMonth()<9 ? `0${this.date.getMonth()+1}` : this.date.getMonth()+1;
+        // let year = this.date.getFullYear()
+        // return `${day}.${mounth}.${year}`;
     }
 
     get _tableFooter() {
@@ -47,16 +48,58 @@ export default class Day {
         return tableHeader;
     }
 
+    renderDay() {
+        let tableBody = document.createElement('div');
+        this.daysOrders.forEach(order => {
+            tableBody.appendChild(order.view);
+        });
+        return tableBody;
+    };
+
+    _tableBody_(order) {
+        this.daysOrders = this.orders.getOrdersByDate(this.date);
+        return this.renderDay();
+        // let tableBody = document.createElement('div');
+        // if (order!=null) {
+        //     do {
+        //         if (!order['date']) {
+        //             order.update('date', new Date(this.date.toJSON()));
+        //         };
+        //         this.daysOrders.push(order);
+        //         if (this.workHoursCount > this.workHoursCountMax) {
+        //             let continueOrderData = Object.assign({}, order.data);
+        //             let continueOrder = new PostpressItem(continueOrderData);
+        //             continueOrder.update('previousPart', order);
+        //             order.update('nextPart', continueOrder);
+        //             continueOrder.updateData('id', `${order.data['id']}-1`);
+        //             continueOrder.update('previousOrder', order);
+        //             continueOrder.update('nextOrder', order['nextOrder']);
+        //             order['nextOrder'].update('previousOrder', continueOrder);
+        //             order.update('nextOrder', continueOrder);
+        //             order.updateData('duration', order.data['duration']-(this.workHoursCount - this.workHoursCountMax));
+        //             continueOrder.updateData('duration', continueOrder.data['duration']-order.data['duration']);
+        //             this.orders.newOrder(continueOrder);
+        //         };
+        //         tableBody.appendChild(order.view);
+        //         order = order['nextOrder'];
+        //     } while ((order!=null) && (this.workHoursCount < this.workHoursCountMax));
+        //     this.nextOrder = order;
+        // };
+        // return tableBody;
+    };
     _tableBody(order) {
+        // console.log(this.orders.getOrdersByDate(this.date));
         let tableBody = document.createElement('div');
         if (order!=null) {
             do {
-                order.update('date', new Date(this.date.toJSON()));
+                if (!order['date']) {
+                    order.update('date', new Date(this.date.toJSON()));
+                };
                 this.daysOrders.push(order);
                 if (this.workHoursCount > this.workHoursCountMax) {
                     let continueOrderData = Object.assign({}, order.data);
                     let continueOrder = new PostpressItem(continueOrderData);
-                    continueOrder.update('previuousPart', order);
+                    continueOrder.update('previousPart', order);
                     order.update('nextPart', continueOrder);
                     continueOrder.updateData('id', `${order.data['id']}-1`);
                     continueOrder.update('previousOrder', order);

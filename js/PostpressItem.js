@@ -15,7 +15,7 @@ export default class PostpressItem extends OrderItem {
         return `<div class="column column-order is-4 is-size-7">${this.data['options']}</div>`
     }
     get day() {
-        return `<div class="column column-order is-2 is-size-7">${this['date'] ? this['date'].toJSON().split('T')[0] : ''}</div>`
+        return `<div class="column column-order is-2 is-size-7">${this['date'] ? this['date'].toLocaleDateString() : ''}</div>`
     }
 
     render() {
