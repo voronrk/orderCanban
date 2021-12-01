@@ -39,9 +39,7 @@ export default class OrderItem {
 
         this.view.addEventListener('dragstart', (event) => {
             event.target.classList.add('dragging');
-            // this['previousOrder'].update('nextOrder', this['nextOrder']);
             globalThis.draggable = this;
-            console.log(globalThis.draggable);
         });
 
         this.view.addEventListener('dragend', (event) => {
@@ -56,8 +54,7 @@ export default class OrderItem {
         // });
 
         this.view.addEventListener('drop', (event) => {
-            console.log(draggable);
-            if (event.target.classList.contains('column-order')) {
+             if (event.target.classList.contains('column-order')) {
                 event.preventDefault();
                 event.stopPropagation();
                 draggable['previousOrder'].update('nextOrder', draggable['nextOrder']);
@@ -66,10 +63,9 @@ export default class OrderItem {
                 draggable.update('previousOrder', this['previousOrder']);
                 this.update('previousOrder', draggable);
                 draggable['previousOrder'].update('nextOrder', draggable);
-                draggable.view.classList.remove('dragging');
-                console.log(draggable);
-                let orderEvent = new Event('orderMoved', {bubbles: true});
+                 let orderEvent = new Event('orderMoved', {bubbles: true});
                 draggable.view.dispatchEvent(orderEvent);
+                draggable.view.classList.remove('dragging');
             };
         });
     }
