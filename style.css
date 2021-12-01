@@ -84,3 +84,9 @@ td, th {
     border: 1px blue solid;
     background: rgba(0,0,255,0.2);
 }
+
+.placeholder {
+    height:20px;
+    background-color: blue;
+    /* opacity: 0.2; */
+}

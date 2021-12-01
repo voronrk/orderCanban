@@ -5,16 +5,19 @@ export default class WorkArea {
     render() {
        this.view.innerHTML = '';
        let currentOrder = this.orders.firstOrder();
+       let currentDate = new Date();
+       currentDate.setDate(this.startDate.getDate());
        do {
-          let newWeek = new Week(this.beginDate, this.titles, currentOrder, this.orders);
-          this.view.appendChild(newWeek.view);
-          currentOrder = newWeek.nextOrder;
+            let newWeek = new Week(currentDate, this.titles, currentOrder, this.orders);
+            this.view.appendChild(newWeek.view);
+            currentOrder = newWeek.nextOrder;
+            currentDate.setDate(newWeek.nextDate.getDate());
        } while (currentOrder);
        return
     }
  
-    constructor(beginDate, titles, orders) {
-      this.beginDate = beginDate;
+    constructor(startDate, titles, orders) {
+      this.startDate = startDate;
       this.titles = titles;
       this.orders = orders;
       this.view = document.createElement('div');

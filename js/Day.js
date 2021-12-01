@@ -50,7 +50,7 @@ export default class Day {
         let tableBody = document.createElement('div');
         if (order!=null) {
             do {
-                order['date'] = this.date;
+                order.update('date', this.date);
                 this.daysOrders.push(order);
                 if (this.workHoursCount > this.workHoursCountMax) {
                     let continueOrderData = Object.assign({}, order.data);
@@ -70,7 +70,7 @@ export default class Day {
             this.nextOrder = order;
         };
         return tableBody;
-    }
+    };
 
     constructor(titles, dayOfWeek, date, order, orders) {
         this.dayOfWeek = dayOfWeek;
@@ -82,6 +82,7 @@ export default class Day {
         this.view.classList.add('column', 'column-day');
         this.view.innerHTML = `<div class="head"><div>${this.dayOfWeek}</div><div>${this._renderDate()}</div></div>`;
 
+        {
         // let headAddOrder = document.createElement('div');
         // headAddOrder.classList.add('head','order-add');
         // headAddOrder.innerText = '+';
@@ -90,6 +91,7 @@ export default class Day {
             
         // });
         // this.view.appendChild(headAddOrder);
+        }
         
         this.view.appendChild(this._tableHeader);
         this.tableBody = this.view.appendChild(this._tableBody(order));
@@ -101,12 +103,20 @@ export default class Day {
 
         this.view.addEventListener('drop', (event) => {
             event.preventDefault();
-            let node = new PostpressItem(globalThis.draggable);
             if (event.target.closest('.column-day')) {
-                this.tableBody.appendChild(node.view);
+                
+
+
                 let orderEvent = new Event('orderMoved', {bubbles: true});
                 node.view.dispatchEvent(orderEvent);
             };
+
+            // let node = new PostpressItem(globalThis.draggable);
+            // if (event.target.closest('.column-day')) {
+            //     this.tableBody.appendChild(node.view);
+            //     let orderEvent = new Event('orderMoved', {bubbles: true});
+            //     node.view.dispatchEvent(orderEvent);
+            // };
         });
 
         // this.view.addEventListener('dragenter', (event) => {

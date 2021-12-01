@@ -13,15 +13,18 @@ export default class OrderItem {
 
     update(key, value){
         this[key] = value;
+        this.updateData(key, value);
+    };
+
+    updateData(key, value) {
         if ((key=='previousOrder') || (key=='nextOrder')) {
             this.data[key] = value ? value.data['id'] : null;
-        };
-        if (key=='date') {
+        } else if (key=='date') {
             this.data[key] = value ? value.toJSON() : value;
-        };        
-    };
-    updateData(key, value) {
-        this.data[key] = value;
+        } else {
+            this.data[key] = value;
+        };
+        this.render();
     };
 
     constructor(data={}) {
@@ -36,28 +39,30 @@ export default class OrderItem {
 
         this.view.addEventListener('dragstart', (event) => {
             event.target.classList.add('dragging');
-            this.data['previousOrder']['nextOrder'] = this.data['nextOrder'];
-            globalThis.draggable = this.data;
+            this['previousOrder'].update('nextOrder', this['nextOrder']);
+            globalThis.draggable = this;
             console.log(globalThis.draggable);
         });
 
-        this.view.addEventListener('dragend', (event) => {
-            event.target.classList.add('is-hidden');
-        });
+        // this.view.addEventListener('dragenter', (event) => {
+        //     let placeholder = document.createElement('div');
+        //     placeholder.classList.add('placeholder');
+        //     console.log(placeholder);
+        //     event.target.parentNode.insertBefore(placeholder, event.target);
+        // });
 
         this.view.addEventListener('drop', (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            let node = new PostpressItem(globalThis.draggable);
-            
-            node.data['nextOrder'] = this.data;
-            node.data['previousOrder'] = this.data['previousOrder'];
-            this.data['previousOrder'] = node.data;
-            node.data['previousOrder']['nextOrder'] = node.data;
             if (event.target.classList.contains('column-order')) {
-                event.target.parentNode.parentNode.insertBefore(node.view, event.target.parentNode);
+                event.preventDefault();
+                event.stopPropagation();
+                draggable.update('nextOrder', this);
+                draggable.update('previousOrder', this['previousOrder']);
+                this.update('previousOrder', draggable);
+                draggable['previousOrder'].update('nextOrder', draggable);
+                draggable.view.classList.remove('dragging');
+                console.log(draggable);
                 let orderEvent = new Event('orderMoved', {bubbles: true});
-                node.view.dispatchEvent(orderEvent);
+                draggable.view.dispatchEvent(orderEvent);
             };
         });
     }
