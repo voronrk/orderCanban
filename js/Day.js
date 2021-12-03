@@ -8,12 +8,27 @@ export default class Day {
 
     get workHoursCount() {
         let duration = 0;
-        if (this.orders.length>0) {
-            this.orders.forEach((order) => {
+        if (this.orders.data.length>0) {
+            this.orders.data.forEach((order) => {
                 duration += +order.data['duration'];
             });
         };
         return duration;
+    }
+
+    insertBefore(order, before) {
+        if (order['previousOrder']) {
+            order['previousOrder'].update('nextOrder', order['nextOrder']);
+        };
+        if (order['nextOrder']) {
+            order['nextOrder'].update('previousOrder', order['previousOrder']);
+        };
+        order.update('nextOrder', before);
+        order.update('previousOrder', before['previousOrder']);
+        before.update('previousOrder', order);
+        if (order['previousOrder']) {
+            order['previousOrder'].update('nextOrder', order);
+        };
     }
 
     _renderDate() {
@@ -87,6 +102,13 @@ export default class Day {
             }
         })
         //=======================================================
+
+        document.addEventListener('orderMoved', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this._render()
+            // orders.save();
+         });
 
         this.view.addEventListener('dragover', (event)=> {
             event.preventDefault();

@@ -11,7 +11,7 @@ const startDate = new Date();
 startDate.setDate(new Date().getDate()-new Date().getDay()+1);
 // console.log(startDate);
 
-let draggable = {};
+let dragging = {};
 
 let workArea = new WorkArea(startDate, titles);
 workField.appendChild(workArea.view);

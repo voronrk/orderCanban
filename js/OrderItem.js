@@ -25,6 +25,21 @@ export default class OrderItem {
         this.render();
     };
 
+    insertBefore(order, before) {
+        if (order['previousOrder']) {
+            order['previousOrder'].update('nextOrder', order['nextOrder']);
+        };
+        if (order['nextOrder']) {
+            order['nextOrder'].update('previousOrder', order['previousOrder']);
+        };
+        order.update('nextOrder', before);
+        order.update('previousOrder', before['previousOrder']);
+        before.update('previousOrder', order);
+        if (order['previousOrder']) {
+            order['previousOrder'].update('nextOrder', order);
+        };
+    }
+
     constructor(data={}) {
         this.data = data;
         this.view = document.createElement('div');
@@ -37,7 +52,7 @@ export default class OrderItem {
 
         this.view.addEventListener('dragstart', (event) => {
             event.target.classList.add('dragging');
-            globalThis.draggable = this;
+            globalThis.dragging = this;
         });
 
         this.view.addEventListener('dragend', (event) => {
@@ -55,15 +70,10 @@ export default class OrderItem {
              if (event.target.classList.contains('column-order')) {
                 event.preventDefault();
                 event.stopPropagation();
-                draggable['previousOrder'].update('nextOrder', draggable['nextOrder']);
-                draggable['nextOrder'].update('previousOrder', draggable['previousOrder']);
-                draggable.update('nextOrder', this);
-                draggable.update('previousOrder', this['previousOrder']);
-                this.update('previousOrder', draggable);
-                draggable['previousOrder'].update('nextOrder', draggable);
-                let orderEvent = new Event('orderMoved', {bubbles: true});
-                draggable.view.dispatchEvent(orderEvent);
-                draggable.view.classList.remove('dragging');
+                this.insertBefore(dragging, this);
+                // let orderEvent = new Event('orderMoved', {bubbles: true});
+                // this.view.dispatchEvent(orderEvent);
+                dragging.view.dispatchEvent(new Event('orderMoved', {bubbles: true}));
             };
         });
     }

@@ -71,11 +71,17 @@ export default class Orders {
     }
 
     insertBefore(order, before) {
-        order['nextOrder'] = before;
-        order['previousOrder'] = before['previousOrder'];
-        before['previousOrder'] = order;
         if (order['previousOrder']) {
-            order['previousOrder']['nextOrder'] = order;
+            order['previousOrder'].update('nextOrder', order['nextOrder']);
+        };
+        if (order['nextOrder']) {
+            order['nextOrder'].update('previousOrder', order['previousOrder']);
+        };
+        order.update('nextOrder', before);
+        order.update('previousOrder', before['previousOrder']);
+        before.update('previousOrder', order);
+        if (order['previousOrder']) {
+            order['previousOrder'].update('nextOrder', order);
         };
     }
 

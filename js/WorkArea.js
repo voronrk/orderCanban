@@ -5,7 +5,7 @@ export default class WorkArea {
 
    weeks = [];
 
-   setStartDate(date) {
+   setStartDate_DEPRECATED(date) {
       this.startDate = new Date(date);
       this._setWeeks();
    };
@@ -42,24 +42,21 @@ export default class WorkArea {
       this.view = document.createElement('div');
       this.getData();
 
-
       document.addEventListener('wheel', (event) => {
-         console.log(event.deltaY);
          if (event.deltaY<0) {
             this.startDate.setDate(this.startDate.getDate()-7);
-            console.log(this.startDate);
             this._setWeeks();
          }
          if (event.deltaY>0) {
             this.startDate.setDate(this.startDate.getDate()+7);
-            console.log(this.startDate);
             this._setWeeks();
          }
       });
-      document.addEventListener('orderMoved', () => {
-         this.render()
-         orders.save();
-      });
+
+      // document.addEventListener('orderMoved', (e) => {
+      //    this.render()
+      //    // orders.save();
+      // });
 
       // document.addEventListener('keyup', (event) => {
       //    if (event.key=='PrintScreen') {
