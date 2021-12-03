@@ -1,6 +1,6 @@
 export default class OrderItem {
 
-    getSibling (id) {
+    getSibling_DEPRECATED (id) {
         for (let item of this.data) {
             if (item['id']===id) {
                 return item

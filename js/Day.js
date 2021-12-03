@@ -46,9 +46,13 @@ export default class Day {
 
     _tableBody() {
         let tableBody = document.createElement('div');
-        for (let i in this.orders.data) {
-            tableBody.appendChild(this.orders.data[i].view);
-        };
+        let currentOrder = this.orders.firstOrder();
+        if (currentOrder) {
+            do {
+                tableBody.appendChild(currentOrder.view);
+                currentOrder = currentOrder['nextOrder'];
+            } while (currentOrder);
+        };        
         return tableBody;
     };
 
@@ -75,6 +79,14 @@ export default class Day {
         this.view.classList.add('column', 'column-day');
 
         this.setOrders(orders);
+
+        //=========================debug=========================
+        this.view.addEventListener('click', (e) => {
+            if (e.target.classList.contains("head")) {
+                console.log(this.orders);
+            }
+        })
+        //=======================================================
 
         this.view.addEventListener('dragover', (event)=> {
             event.preventDefault();

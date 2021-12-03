@@ -27,6 +27,14 @@ export default class Orders {
         this.data.push(order);
     }
 
+    initOrder(orderData) {
+        let order = new PostpressItem(orderData);
+        order.update("previousOrder", this.getOrderById(order.data['previousOrder']));
+        order.update("nextOrder", this.getOrderById(order.data['nextOrder']));
+        order.update("date", order.data['date'] ? new Date(order.data['date']) : null);
+        this.data.push(order);
+    }
+
     moveBefore(order, before) {
         order['previousOrder']['nextOrder'] = order['nextOrder'];
         order['nextOrder']['previousOrder'] = order['previousOrder'];
@@ -60,7 +68,6 @@ export default class Orders {
         if (order['nextOrder']) {
             order['nextOrder']['previousOrder'] = order;
         };
-        // console.log(this.data);
     }
 
     insertBefore(order, before) {
@@ -70,7 +77,6 @@ export default class Orders {
         if (order['previousOrder']) {
             order['previousOrder']['nextOrder'] = order;
         };
-        // console.log(this.data);
     }
 
     firstOrder() {
@@ -124,7 +130,7 @@ export default class Orders {
 
     constructor (data = []) {
         if (data) {
-            data.forEach(orderData => this.addOrder(orderData));
+            data.forEach(orderData => this.initOrder(orderData));
         };
     };
 };
