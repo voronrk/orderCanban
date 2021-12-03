@@ -1,30 +1,70 @@
 import Week from "./Week.js";
+import Orders from "./Orders.js";
 
 export default class WorkArea {
 
-    render() {
-       this.view.innerHTML = '';
-       let currentOrder = this.orders.firstOrder();
-       let currentDate = new Date();
-       currentDate.setDate(this.startDate.getDate());
-       do {
-            let newWeek = new Week(currentDate, this.titles, currentOrder, this.orders);
-            this.view.appendChild(newWeek.view);
-            currentOrder = newWeek.nextOrder;
-            currentDate.setDate(newWeek.nextDate.getDate());
-       } while (currentOrder);
-       return
-    }
+   weeks = [];
+
+   setStartDate(date) {
+      this.startDate = new Date(date);
+      this._setWeeks();
+   };
+
+   render() {
+      this.view.innerHTML = '';
+      this.weeks.forEach((week) => {
+         this.view.appendChild(week.view);
+      });         
+   }
+
+   getData() {
+      fetch('/js/testOrders.json')
+         .then((res) => res.json())
+         .then ((data) => {
+            this.orders = new Orders(data, this.startDate);
+            this._setWeeks();
+         })
+   }
+
+   _setWeeks() {
+      let currentDate = new Date(this.startDate.toJSON());
+      this.weeks = [];
+      for (let i=0; i<3; i++) {
+         this.weeks.push(new Week(currentDate, this.titles, this.orders));
+         currentDate = new Date(this.weeks[i].nextDate.toJSON());
+      };
+      this.render();
+   }
  
-    constructor(startDate, titles, orders) {
+   constructor(startDate, titles) {
       this.startDate = startDate;
       this.titles = titles;
-      this.orders = orders;
       this.view = document.createElement('div');
-      this.render();
+      this.getData();
+
+
+      document.addEventListener('wheel', (event) => {
+         console.log(event.deltaY);
+         if (event.deltaY<0) {
+            this.startDate.setDate(this.startDate.getDate()-7);
+            console.log(this.startDate);
+            this._setWeeks();
+         }
+         if (event.deltaY>0) {
+            this.startDate.setDate(this.startDate.getDate()+7);
+            console.log(this.startDate);
+            this._setWeeks();
+         }
+      });
       document.addEventListener('orderMoved', () => {
          this.render()
          orders.save();
       });
-    }
- };
+
+      // document.addEventListener('keyup', (event) => {
+      //    if (event.key=='PrintScreen') {
+      //       this.setStartDate('2021-05-01');
+      //    }
+      // });
+   }
+};

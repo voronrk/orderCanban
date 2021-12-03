@@ -13,7 +13,8 @@ export default class OrderItem {
 
     update(key, value){
         this[key] = value;
-        this.updateData(key, value);
+        // this.updateData(key, value);
+        this.render();
     };
 
     updateData(key, value) {

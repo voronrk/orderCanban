@@ -2,25 +2,34 @@ import Day from "./Day.js";
 
 export default class Week {
 
+    days = [];
+
     daysOfWeek = ['Понедельник', 'Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье'];
 
-    constructor(startDate, titles, order, orders) {
+    render() {
+        this.view.innerHTML = '';
+        this.days.forEach((day) => {
+           this.view.appendChild(day.view);
+        });         
+    }
+
+    _setDays(titles) {
+        let currentDate = new Date(this.startDate.toJSON());
+        for (let i=0; i<7; i++) {
+           this.days.push(new Day(titles, this.daysOfWeek[i], currentDate, this.orders));
+           currentDate.setDate(currentDate.getDate()+1);
+        };
+        this.render();
+        this.nextDate = new Date(currentDate.toJSON());
+     }
+
+    constructor(startDate, titles, orders) {
         this.orders = orders;
-        this.startDate = new Date();
-        this.startDate.setDate(this.startDate.getDate());
+        this.startDate = new Date(startDate.toJSON());
         this.view = document.createElement('div');
         this.view.classList.add('columns','is-gapless','week');
 
-        let currentOrder = order;
-        let currentDate = new Date();
-        for (let i=0; i < 7; i++) {
-            currentDate.setDate(startDate.getDate()+i);
-            let newDay = new Day(titles, this.daysOfWeek[i], currentDate, currentOrder, this.orders);
-            this.view.appendChild(newDay.view);
-            currentOrder = newDay.nextOrder;
-        };
-        this.nextDate = new Date();
-        this.nextDate.setDate(currentDate.getDate()+1);
-        this.nextOrder = currentOrder ? currentOrder : null;
+        this._setDays(titles);
+
     }
 }

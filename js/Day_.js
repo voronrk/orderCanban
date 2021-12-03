@@ -1,5 +1,4 @@
 import PostpressItem from "./PostpressItem.js";
-import Orders from "./Orders.js";
 
 export default class Day {
 
@@ -7,15 +6,15 @@ export default class Day {
 
     get workHoursCount() {
         let duration = 0;
-        if (this.orders.length>0) {
-            this.orders.forEach((order) => {
+        if (this.daysOrders.length>0) {
+            this.daysOrders.forEach((order) => {
                 duration += +order.data['duration'];
             });
         };
         return duration;
     }
 
-    orders = [];
+    daysOrders = [];
 
     _renderDate() {
         return this.date.toLocaleDateString();
@@ -45,35 +44,59 @@ export default class Day {
         return tableHeader;
     }
 
-    _tableBody() {
+    renderDay() {
         let tableBody = document.createElement('div');
-        for (let i in this.orders) {
-            tableBody.appendChild(this.orders[i].view);
+        this.daysOrders.forEach(order => {
+            tableBody.appendChild(order.view);
+        });
+        return tableBody;
+    };
+
+    _tableBody(order) {
+        this.daysOrders = this.orders.getOrdersByDate(this.date);
+        return this.renderDay();
+    };
+    
+    _tableBody_(order) {
+        // console.log(this.orders.getOrdersByDate(this.date));
+        let tableBody = document.createElement('div');
+        if (order!=null) {
+            do {
+                if (!order['date']) {
+                    order.update('date', new Date(this.date.toJSON()));
+                };
+                this.daysOrders.push(order);
+                if (this.workHoursCount > this.workHoursCountMax) {
+                    let continueOrderData = Object.assign({}, order.data);
+                    let continueOrder = new PostpressItem(continueOrderData);
+                    continueOrder.update('previousPart', order);
+                    order.update('nextPart', continueOrder);
+                    continueOrder.updateData('id', `${order.data['id']}-1`);
+                    continueOrder.update('previousOrder', order);
+                    continueOrder.update('nextOrder', order['nextOrder']);
+                    order['nextOrder'].update('previousOrder', continueOrder);
+                    order.update('nextOrder', continueOrder);
+                    order.updateData('duration', order.data['duration']-(this.workHoursCount - this.workHoursCountMax));
+                    continueOrder.updateData('duration', continueOrder.data['duration']-order.data['duration']);
+                    this.orders.newOrder(continueOrder);
+                };
+                tableBody.appendChild(order.view);
+                order = order['nextOrder'];
+            } while ((order!=null) && (this.workHoursCount < this.workHoursCountMax));
+            this.nextOrder = order;
         };
         return tableBody;
     };
 
-    _render() {
-        this.view.innerHTML = `<div class="head"><div>${this.dayOfWeek}</div><div>${this._renderDate()}</div></div>`;
-        this.view.appendChild(this._tableHeader);
-        this.tableBody = this.view.appendChild(this._tableBody());
-        this.view.appendChild(this._tableFooter);
-    }
-
-    setOrders(orders) {
-        this.orders = orders.getOrdersByDate(this.date);
-        console.log(this.orders);
-        this._render();
-    }
-
-    constructor(titles, dayOfWeek, date, orders) {
+    constructor(titles, dayOfWeek, date, order, orders) {
         this.dayOfWeek = dayOfWeek;
         this.date = date;
         this.titles = titles;
+        this.orders = orders;
+
         this.view = document.createElement('div');
         this.view.classList.add('column', 'column-day');
-
-        this.setOrders(orders);
+        this.view.innerHTML = `<div class="head"><div>${this.dayOfWeek}</div><div>${this._renderDate()}</div></div>`;
 
         {
         // let headAddOrder = document.createElement('div');
@@ -86,7 +109,10 @@ export default class Day {
         // this.view.appendChild(headAddOrder);
         }
         
-        
+        this.view.appendChild(this._tableHeader);
+        this.tableBody = this.view.appendChild(this._tableBody(order));
+        this.view.appendChild(this._tableFooter);
+
         this.view.addEventListener('dragover', (event)=> {
             event.preventDefault();
         },false);

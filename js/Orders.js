@@ -90,6 +90,14 @@ export default class Orders {
         }
     };
 
+    getOrdersByDateRange(date) {
+        // if (date) {
+        //     return this.data.filter(order => {return order['date']>=date});
+        // } else {
+        //     return this.data.filter(order => {return order['date']==null});
+        // }
+    };
+
     save() {
         let dataForSave = [];
         this.data.forEach((item) => {
@@ -101,11 +109,10 @@ export default class Orders {
 
     constructor (data) {
         data.forEach(order => this.data.push(new PostpressItem(order)));
-        console.log(this.data);
 
         this.data.forEach(order => {
-            order.update("previousOrder", this.getOrderById(order.data['previousOrder']));
-            order.update("nextOrder", this.getOrderById(order.data['nextOrder']));
+            // order.update("previousOrder", this.getOrderById(order.data['previousOrder']));
+            // order.update("nextOrder", this.getOrderById(order.data['nextOrder']));
             order.update("date", order.data['date'] ? new Date(order.data['date']) : null);
         });
     };
