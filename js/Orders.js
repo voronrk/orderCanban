@@ -15,9 +15,16 @@ export default class Orders {
         } while (order!=null);
     }
 
-    newOrder(order) {
+    addOrder(orderData) {
+        let order = new PostpressItem(orderData);
+        order.update("previousOrder", this.getOrderById(order.data['previousOrder']));
+        order.update("nextOrder", this.getOrderById(order.data['nextOrder']));
+        order.update("date", order.data['date'] ? new Date(order.data['date']) : null);
+        if (this.lastOrder()) {
+            order.update('previousOrder', this.lastOrder());
+            order['previousOrder'].update('nextOrder', order);
+        };
         this.data.push(order);
-        // this.save();
     }
 
     moveBefore(order, before) {
@@ -67,11 +74,19 @@ export default class Orders {
     }
 
     firstOrder() {
-        return this.data.filter(order => {return order['previousOrder']===null})[0];
+        if (this.data.length>0) {
+            return this.data.filter(order => {return order['previousOrder']===null})[0];
+        } else {
+            return null
+        };
     };
 
     lastOrder() {
-        return this.data.filter(order => {return order['nextOrder']===null})[0];
+        if (this.data.length>0) {
+            return this.data.filter(order => {return order['nextOrder']===null})[0];
+        } else {
+            return null
+        };
     };
     
     getOrderById(id) {
@@ -107,13 +122,9 @@ export default class Orders {
         localStorage.setItem('orders', JSON.stringify(dataForSave));
     }
 
-    constructor (data) {
-        data.forEach(order => this.data.push(new PostpressItem(order)));
-
-        this.data.forEach(order => {
-            // order.update("previousOrder", this.getOrderById(order.data['previousOrder']));
-            // order.update("nextOrder", this.getOrderById(order.data['nextOrder']));
-            order.update("date", order.data['date'] ? new Date(order.data['date']) : null);
-        });
+    constructor (data = []) {
+        if (data) {
+            data.forEach(orderData => this.addOrder(orderData));
+        };
     };
 };

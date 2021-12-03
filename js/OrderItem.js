@@ -1,5 +1,3 @@
-import PostpressItem from "./PostpressItem.js";
-
 export default class OrderItem {
 
     getSibling (id) {
@@ -13,8 +11,7 @@ export default class OrderItem {
 
     update(key, value){
         this[key] = value;
-        // this.updateData(key, value);
-        this.render();
+        this.updateData(key, value);
     };
 
     updateData(key, value) {

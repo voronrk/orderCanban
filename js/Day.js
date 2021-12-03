@@ -1,9 +1,10 @@
-import PostpressItem from "./PostpressItem.js";
 import Orders from "./Orders.js";
 
 export default class Day {
 
     workHoursCountMax = 8;
+
+    orders = [];
 
     get workHoursCount() {
         let duration = 0;
@@ -14,8 +15,6 @@ export default class Day {
         };
         return duration;
     }
-
-    orders = [];
 
     _renderDate() {
         return this.date.toLocaleDateString();
@@ -47,8 +46,8 @@ export default class Day {
 
     _tableBody() {
         let tableBody = document.createElement('div');
-        for (let i in this.orders) {
-            tableBody.appendChild(this.orders[i].view);
+        for (let i in this.orders.data) {
+            tableBody.appendChild(this.orders.data[i].view);
         };
         return tableBody;
     };
@@ -61,8 +60,10 @@ export default class Day {
     }
 
     setOrders(orders) {
-        this.orders = orders.getOrdersByDate(this.date);
-        console.log(this.orders);
+        this.orders = new Orders();
+        orders.getOrdersByDate(this.date).forEach(order => {
+            this.orders.addOrder(order.data);
+        });
         this._render();
     }
 
@@ -75,18 +76,6 @@ export default class Day {
 
         this.setOrders(orders);
 
-        {
-        // let headAddOrder = document.createElement('div');
-        // headAddOrder.classList.add('head','order-add');
-        // headAddOrder.innerText = '+';
-        // headAddOrder.addEventListener('click', ()=> {
-        //     console.log(this);
-            
-        // });
-        // this.view.appendChild(headAddOrder);
-        }
-        
-        
         this.view.addEventListener('dragover', (event)=> {
             event.preventDefault();
         },false);
