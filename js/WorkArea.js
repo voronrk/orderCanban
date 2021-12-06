@@ -30,7 +30,7 @@ export default class WorkArea {
       let currentDate = new Date(this.startDate.toJSON());
       this.weeks = [];
       for (let i=0; i<3; i++) {
-         this.weeks.push(new Week(currentDate, this.titles, this.orders));
+         this.weeks.push(new Week(currentDate.toJSON(), this.titles, this.orders));
          currentDate = new Date(this.weeks[i].nextDate.toJSON());
       };
       this.render();

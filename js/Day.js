@@ -16,20 +16,20 @@ export default class Day {
         return duration;
     }
 
-    insertBefore(order, before) {
-        if (order['previousOrder']) {
-            order['previousOrder'].update('nextOrder', order['nextOrder']);
-        };
-        if (order['nextOrder']) {
-            order['nextOrder'].update('previousOrder', order['previousOrder']);
-        };
-        order.update('nextOrder', before);
-        order.update('previousOrder', before['previousOrder']);
-        before.update('previousOrder', order);
-        if (order['previousOrder']) {
-            order['previousOrder'].update('nextOrder', order);
-        };
-    }
+    // insertBefore(order, before) {
+    //     if (order['previousOrder']) {
+    //         order['previousOrder'].update('nextOrder', order['nextOrder']);
+    //     };
+    //     if (order['nextOrder']) {
+    //         order['nextOrder'].update('previousOrder', order['previousOrder']);
+    //     };
+    //     order.update('nextOrder', before);
+    //     order.update('previousOrder', before['previousOrder']);
+    //     before.update('previousOrder', order);
+    //     if (order['previousOrder']) {
+    //         order['previousOrder'].update('nextOrder', order);
+    //     };
+    // }
 
     _renderDate() {
         return this.date.toLocaleDateString();
@@ -88,7 +88,7 @@ export default class Day {
 
     constructor(titles, dayOfWeek, date, orders) {
         this.dayOfWeek = dayOfWeek;
-        this.date = date;
+        this.date = new Date(date);
         this.titles = titles;
         this.view = document.createElement('div');
         this.view.classList.add('column', 'column-day');
@@ -98,16 +98,18 @@ export default class Day {
         //=========================debug=========================
         this.view.addEventListener('click', (e) => {
             if (e.target.classList.contains("head")) {
-                console.log(this.orders);
+                console.log(this);
             }
         })
         //=======================================================
 
-        document.addEventListener('orderMoved', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            this._render()
+        this.view.addEventListener('orderMoved', (e) => {
+            console.log(this);
+            // this.orders.addOrder(dragging.data);
+            // this._render()
             // orders.save();
+            e.preventDefault();
+            e.stopPropagation()
          });
 
         this.view.addEventListener('dragover', (event)=> {
@@ -116,6 +118,7 @@ export default class Day {
 
         this.view.addEventListener('drop', (event) => {
             event.preventDefault();
+            console.log(event.target);
             if (event.target.closest('.column-day')) {
                 
 

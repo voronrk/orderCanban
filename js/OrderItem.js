@@ -53,6 +53,7 @@ export default class OrderItem {
         this.view.addEventListener('dragstart', (event) => {
             event.target.classList.add('dragging');
             globalThis.dragging = this;
+            // console.log(globalThis.dragging);
         });
 
         this.view.addEventListener('dragend', (event) => {
@@ -68,12 +69,10 @@ export default class OrderItem {
 
         this.view.addEventListener('drop', (event) => {
              if (event.target.classList.contains('column-order')) {
+                // this.insertBefore(dragging, this);
+                this.view.dispatchEvent(new Event('orderMoved', {bubbles: true}));
                 event.preventDefault();
                 event.stopPropagation();
-                this.insertBefore(dragging, this);
-                // let orderEvent = new Event('orderMoved', {bubbles: true});
-                // this.view.dispatchEvent(orderEvent);
-                dragging.view.dispatchEvent(new Event('orderMoved', {bubbles: true}));
             };
         });
     }

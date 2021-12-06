@@ -16,7 +16,7 @@ export default class Week {
     _setDays(titles) {
         let currentDate = new Date(this.startDate.toJSON());
         for (let i=0; i<7; i++) {
-           this.days.push(new Day(titles, this.daysOfWeek[i], currentDate, this.orders));
+           this.days.push(new Day(titles, this.daysOfWeek[i], currentDate.toJSON(), this.orders));
            currentDate.setDate(currentDate.getDate()+1);
         };
         this.render();
@@ -25,7 +25,7 @@ export default class Week {
 
     constructor(startDate, titles, orders) {
         this.orders = orders;
-        this.startDate = new Date(startDate.toJSON());
+        this.startDate = new Date(startDate);
         this.view = document.createElement('div');
         this.view.classList.add('columns','is-gapless','week');
 
