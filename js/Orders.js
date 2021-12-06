@@ -5,7 +5,7 @@ export default class Orders {
     data = [];
 
     debug(firstOrder){
-        let order = Object.assign({}, firstOrder);
+        let order = Object.assign({}, this.firstOrder());
         let i=0;
         do {
             i++;
@@ -20,11 +20,25 @@ export default class Orders {
         order.update("previousOrder", this.getOrderById(order.data['previousOrder']));
         order.update("nextOrder", this.getOrderById(order.data['nextOrder']));
         order.update("date", order.data['date'] ? new Date(order.data['date']) : null);
-        if (this.lastOrder()) {
-            order.update('previousOrder', this.lastOrder());
+        if (order['previousOrder']) {
             order['previousOrder'].update('nextOrder', order);
         };
+        if (order['nextOrder']) {
+            order['nextOrder'].update('previousOrder', order);
+        };
         this.data.push(order);
+        return order;
+    }
+
+    insertAsLast(orderData) {
+        if (this.lastOrder()) {
+            let order = this.addOrder(orderData);
+            order.update('previousOrder', this.lastOrder());
+            order['previousOrder'].update('nextOrder', order);
+        } else {
+            this.addOrder(orderData);
+        };
+        
     }
 
     initOrder(orderData) {
@@ -71,6 +85,7 @@ export default class Orders {
     }
 
     insertBefore(order, before) {
+        console.log('Orders');
         if (order['previousOrder']) {
             order['previousOrder'].update('nextOrder', order['nextOrder']);
         };

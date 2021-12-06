@@ -25,20 +25,30 @@ export default class OrderItem {
         this.render();
     };
 
-    insertBefore(order, before) {
-        if (order['previousOrder']) {
-            order['previousOrder'].update('nextOrder', order['nextOrder']);
+    delete() {
+        if (this['previousOrder']) {
+            this['previousOrder'].update('nextOrder', this['nextOrder']);
         };
-        if (order['nextOrder']) {
-            order['nextOrder'].update('previousOrder', order['previousOrder']);
+        if (this['nextOrder']) {
+            this['nextOrder'].update('previousOrder', this['previousOrder']);
         };
-        order.update('nextOrder', before);
-        order.update('previousOrder', before['previousOrder']);
-        before.update('previousOrder', order);
-        if (order['previousOrder']) {
-            order['previousOrder'].update('nextOrder', order);
-        };
-    }
+        this.view.dispatchEvent(new CustomEvent('orderDeleted', {detail: this, bubbles: true}));
+    };
+
+    // insertBefore(order, next) {
+    //     if (order['previousOrder']) {
+    //         order['previousOrder'].update('nextOrder', order['nextOrder']);
+    //     };
+    //     if (order['nextOrder']) {
+    //         order['nextOrder'].update('previousOrder', order['previousOrder']);
+    //     };
+    //     order.update('nextOrder', next);
+    //     order.update('previousOrder', next['previousOrder']);
+    //     next.update('previousOrder', order);
+    //     if (order['previousOrder']) {
+    //         order['previousOrder'].update('nextOrder', order);
+    //     };
+    // }
 
     constructor(data={}) {
         this.data = data;
@@ -53,7 +63,6 @@ export default class OrderItem {
         this.view.addEventListener('dragstart', (event) => {
             event.target.classList.add('dragging');
             globalThis.dragging = this;
-            // console.log(globalThis.dragging);
         });
 
         this.view.addEventListener('dragend', (event) => {
@@ -69,8 +78,7 @@ export default class OrderItem {
 
         this.view.addEventListener('drop', (event) => {
              if (event.target.classList.contains('column-order')) {
-                // this.insertBefore(dragging, this);
-                this.view.dispatchEvent(new Event('orderMoved', {bubbles: true}));
+                this.view.dispatchEvent(new CustomEvent('orderMoved', {detail: this, bubbles: true}));
                 event.preventDefault();
                 event.stopPropagation();
             };

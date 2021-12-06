@@ -81,7 +81,7 @@ export default class Day {
     setOrders(orders) {
         this.orders = new Orders();
         orders.getOrdersByDate(this.date).forEach(order => {
-            this.orders.addOrder(order.data);
+            this.orders.insertAsLast(order.data);
         });
         this._render();
     }
@@ -99,15 +99,27 @@ export default class Day {
         this.view.addEventListener('click', (e) => {
             if (e.target.classList.contains("head")) {
                 console.log(this);
+                this.orders.debug();
             }
         })
         //=======================================================
 
         this.view.addEventListener('orderMoved', (e) => {
-            console.log(this);
-            // this.orders.addOrder(dragging.data);
-            // this._render()
+            console.log(e.detail);
+            let order = this.orders.addOrder(dragging.data);
+            this.orders.insertBefore(order, e.detail);
+            dragging.delete();
+            // console.log(order);
+            this._render()
             // orders.save();
+            e.preventDefault();
+            e.stopPropagation()
+        });
+
+        this.view.addEventListener('orderDeleted', (e) => {
+            console.log(e.detail);
+            this.orders.data.splice(this.orders.data.indexOf(e.detail),1);
+            this._render()
             e.preventDefault();
             e.stopPropagation()
          });
@@ -119,13 +131,13 @@ export default class Day {
         this.view.addEventListener('drop', (event) => {
             event.preventDefault();
             console.log(event.target);
-            if (event.target.closest('.column-day')) {
+            // if (event.target.closest('.column-day')) {
                 
 
 
-                let orderEvent = new Event('orderMoved', {bubbles: true});
-                node.view.dispatchEvent(orderEvent);
-            };
+            //     let orderEvent = new Event('orderMoved', {bubbles: true});
+            //     node.view.dispatchEvent(orderEvent);
+            // };
 
             // let node = new PostpressItem(globalThis.draggable);
             // if (event.target.closest('.column-day')) {
