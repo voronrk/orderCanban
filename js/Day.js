@@ -105,19 +105,16 @@ export default class Day {
         //=======================================================
 
         this.view.addEventListener('orderMoved', (e) => {
-            console.log(e.detail);
+            e.preventDefault();
+            e.stopPropagation();
+            // dragging.data['date'] = this.date.toJSON();
             let order = this.orders.addOrder(dragging.data);
             this.orders.insertBefore(order, e.detail);
             dragging.delete();
-            // console.log(order);
             this._render()
-            // orders.save();
-            e.preventDefault();
-            e.stopPropagation()
         });
 
         this.view.addEventListener('orderDeleted', (e) => {
-            console.log(e.detail);
             this.orders.data.splice(this.orders.data.indexOf(e.detail),1);
             this._render()
             e.preventDefault();
@@ -130,25 +127,10 @@ export default class Day {
 
         this.view.addEventListener('drop', (event) => {
             event.preventDefault();
-            console.log(event.target);
-            // if (event.target.closest('.column-day')) {
-                
-
-
-            //     let orderEvent = new Event('orderMoved', {bubbles: true});
-            //     node.view.dispatchEvent(orderEvent);
-            // };
-
-            // let node = new PostpressItem(globalThis.draggable);
-            // if (event.target.closest('.column-day')) {
-            //     this.tableBody.appendChild(node.view);
-            //     let orderEvent = new Event('orderMoved', {bubbles: true});
-            //     node.view.dispatchEvent(orderEvent);
-            // };
+            dragging.data['date'] = this.date.toJSON();
+            this.orders.insertAsLast(dragging.data);
+            dragging.delete();
+            this._render();
         });
-
-        // this.view.addEventListener('dragenter', (event) => {
-        //     console.log('enter');
-        // })
     };
 }

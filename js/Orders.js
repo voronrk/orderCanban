@@ -33,10 +33,13 @@ export default class Orders {
     insertAsLast(orderData) {
         if (this.lastOrder()) {
             let order = this.addOrder(orderData);
+            order.update('nextOrder', null);
             order.update('previousOrder', this.lastOrder());
             order['previousOrder'].update('nextOrder', order);
         } else {
-            this.addOrder(orderData);
+            let order = this.addOrder(orderData);
+            order.update('nextOrder', null);
+            order.update('previousOrder', null);
         };
         
     }
@@ -85,7 +88,6 @@ export default class Orders {
     }
 
     insertBefore(order, before) {
-        console.log('Orders');
         if (order['previousOrder']) {
             order['previousOrder'].update('nextOrder', order['nextOrder']);
         };
