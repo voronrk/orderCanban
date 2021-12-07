@@ -106,7 +106,6 @@ export default class Day {
         this.view.addEventListener('click', (e) => {
             if (e.target.classList.contains("head")) {
                 console.log(this);
-                // this.orders.debug();
             }
         })
         //=======================================================
@@ -114,7 +113,7 @@ export default class Day {
         this.view.addEventListener('orderMoved', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            // dragging.data['date'] = this.date.toDateString();
+            dragging.update('date', this.date);
             let order = this.orders.addOrder(dragging.data);
             this.orders.insertBefore(order, e.detail);
             dragging.delete();
