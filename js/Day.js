@@ -78,13 +78,16 @@ export default class Day {
         this.view.appendChild(this._tableFooter);
     }
 
-    setOrders() {
+    setOrders(machine) {
         fetch('/getData.php', {
            method: 'POST', 
            headers: {
               'Content-Type': 'application/json'
            },
-           body: JSON.stringify({date: this.date.toDateString()})
+           body: JSON.stringify({
+               date: this.date.toDateString(),
+               machine: machine
+            })
            })
            .then((res) => res.json())
            .then ((data) => {
@@ -93,14 +96,14 @@ export default class Day {
         })
     }
 
-    constructor(titles, dayOfWeek, date, orders) {
+    constructor(titles, dayOfWeek, date, orders, machine) {
         this.dayOfWeek = dayOfWeek;
         this.date = new Date(date);
         this.titles = titles;
         this.view = document.createElement('div');
         this.view.classList.add('column', 'column-day');
 
-        this.setOrders();
+        this.setOrders(machine);
 
         //=========================debug=========================
         this.view.addEventListener('click', (e) => {

@@ -13,23 +13,23 @@ export default class Week {
         });         
     }
 
-    _setDays(titles) {
+    _setDays(titles, machine) {
         let currentDate = new Date(this.startDate.toDateString());
         for (let i=0; i<7; i++) {
-           this.days.push(new Day(titles, this.daysOfWeek[i], currentDate.toDateString(), this.orders));
+           this.days.push(new Day(titles, this.daysOfWeek[i], currentDate.toDateString(), this.orders, machine));
            currentDate.setDate(currentDate.getDate()+1);
         };
         this.render();
         this.nextDate = new Date(currentDate.toDateString());
     }
 
-    constructor(startDate, titles, orders) {
+    constructor(startDate, titles, orders, machine) {
         this.orders = orders;
         this.startDate = new Date(startDate);
         this.view = document.createElement('div');
         this.view.classList.add('columns','is-gapless','week');
 
-        this._setDays(titles);
+        this._setDays(titles, machine);
 
     }
 }

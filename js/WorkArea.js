@@ -26,38 +26,39 @@ export default class WorkArea {
          })
    }
 
-   getData() {
-      fetch('/getData.php', {
-         method: 'POST', 
-         headers: {
-            'Content-Type': 'application/json'
-         },
-         body: JSON.stringify({date: this.startDate.toDateString()})
-         })
-         .then((res) => res.json())
-         .then ((data) => {
-            console.log(data);
-            this.orders = new Orders(data, this.startDate);
-            this._setWeeks();
-         })
-   }
+   // getData() {
+   //    fetch('/getData.php', {
+   //       method: 'POST', 
+   //       headers: {
+   //          'Content-Type': 'application/json'
+   //       },
+   //       body: JSON.stringify({date: this.startDate.toDateString()})
+   //       })
+   //       .then((res) => res.json())
+   //       .then ((data) => {
+   //          console.log(data);
+   //          this.orders = new Orders(data, this.startDate);
+   //          this._setWeeks();
+   //       })
+   // }
 
-   _setWeeks() {
+   _setWeeks(machine) {
       let currentDate = new Date(this.startDate.toDateString());
       this.weeks = [];
       for (let i=0; i<3; i++) {
-         this.weeks.push(new Week(currentDate.toDateString(), this.titles, this.orders));
+         this.weeks.push(new Week(currentDate.toDateString(), this.titles, this.orders, machine));
          currentDate = new Date(this.weeks[i].nextDate.toDateString());
       };
       this.render();
    }
  
    constructor(startDate, titles) {
+      this.machine = 'ЛМ';
       this.startDate = startDate;
       this.titles = titles;
       this.view = document.createElement('div');
       this.orders = [];
-      this._setWeeks();
+      this._setWeeks('ЛМ');
       // this.getData();
 
       document.addEventListener('wheel', (event) => {

@@ -2,6 +2,7 @@
 $params=json_decode(file_get_contents('php://input'),true);
 
 $date = $params['date'];
+$machine = $params['machine'];
 // $date = getdate(strtotime($params['date']));
 // $date = getdate(strtotime($params['date']));
 
@@ -11,7 +12,7 @@ $data = [
     ["id" => "3",  "type" => "PostpressItem", "orderNum" => "03", "customer" =>"Детотрюн", "duration" =>3, "machine" => "ЛМ", "options" =>"Матовая пленка", "status" => "", "dateLock" => false, "previousOrder" => null, "nextOrder" => null, "previousPart" => null, "nextPart" => null, "date" => "Wed Dec 08 2021"],
     ["id" => "4",  "type" => "PostpressItem", "orderNum" => "04", "customer" =>"Детотрюн", "duration" =>6, "machine" => "ЛМ", "options" =>"Матовая пленка", "status" => "", "dateLock" => false, "previousOrder" => null, "nextOrder" => null, "previousPart" => null, "nextPart" => null, "date" => "Mon Dec 06 2021"],
     ["id" => "5",  "type" => "PostpressItem", "orderNum" => "05", "customer" =>"Детотрюн", "duration" =>1, "machine" => "ЛМ", "options" =>"Матовая пленка", "status" => "", "dateLock" => false, "previousOrder" => null, "nextOrder" => null, "previousPart" => null, "nextPart" => null, "date" => "Mon Dec 06 2021"],
-    ["id" => "6",  "type" => "PostpressItem", "orderNum" => "06", "customer" =>"Детотрюн", "duration" =>4, "machine" => "ЛМ", "options" =>"Матовая пленка", "status" => "", "dateLock" => false, "previousOrder" => null, "nextOrder" => null, "previousPart" => null, "nextPart" => null, "date" => "Mon Dec 06 2021"],
+    ["id" => "6",  "type" => "PostpressItem", "orderNum" => "06", "customer" =>"Детотрюн", "duration" =>4, "machine" => "STS", "options" =>"Матовая пленка", "status" => "", "dateLock" => false, "previousOrder" => null, "nextOrder" => null, "previousPart" => null, "nextPart" => null, "date" => "Mon Dec 06 2021"],
     ["id" => "7",  "type" => "PostpressItem", "orderNum" => "07", "customer" =>"Детотрюн", "duration" =>7, "machine" => "ЛМ", "options" =>"Матовая пленка", "status" => "", "dateLock" => false, "previousOrder" => null, "nextOrder" => null, "previousPart" => null, "nextPart" => null, "date" => "Mon Dec 06 2021"],
     ["id" => "8",  "type" => "PostpressItem", "orderNum" => "08", "customer" =>"Детотрюн", "duration" =>2, "machine" => "ЛМ", "options" =>"Матовая пленка", "status" => "", "dateLock" => false, "previousOrder" => null, "nextOrder" => null, "previousPart" => null, "nextPart" => null, "date" => "Mon Dec 06 2021"],
     ["id" => "9",  "type" => "PostpressItem", "orderNum" => "09", "customer" =>"Детотрюн", "duration" =>1, "machine" => "ЛМ", "options" =>"Матовая пленка", "status" => "", "dateLock" => false, "previousOrder" => null, "nextOrder" => null, "previousPart" => null, "nextPart" => null, "date" => "Fri Dec 10 2021"],
@@ -34,7 +35,8 @@ $data = [
 
 $output_data = array_values(array_filter($data, function($item) {
     global $date;
-    return $item['date'] == $date;
+    global $machine;
+    return (($item['date'] == $date) && ($item['machine']==$machine));
 }));
 
 echo json_encode($output_data);
