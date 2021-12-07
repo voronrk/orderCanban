@@ -78,12 +78,19 @@ export default class Day {
         this.view.appendChild(this._tableFooter);
     }
 
-    setOrders(orders) {
-        this.orders = new Orders();
-        orders.getOrdersByDate(this.date).forEach(order => {
-            this.orders.insertAsLast(order.data);
-        });
-        this._render();
+    setOrders() {
+        fetch('/getData.php', {
+           method: 'POST', 
+           headers: {
+              'Content-Type': 'application/json'
+           },
+           body: JSON.stringify({date: this.date.toDateString()})
+           })
+           .then((res) => res.json())
+           .then ((data) => {
+                this.orders = new Orders(data);
+                this._render();
+        })
     }
 
     constructor(titles, dayOfWeek, date, orders) {
@@ -93,13 +100,13 @@ export default class Day {
         this.view = document.createElement('div');
         this.view.classList.add('column', 'column-day');
 
-        this.setOrders(orders);
+        this.setOrders();
 
         //=========================debug=========================
         this.view.addEventListener('click', (e) => {
             if (e.target.classList.contains("head")) {
                 console.log(this);
-                this.orders.debug();
+                // this.orders.debug();
             }
         })
         //=======================================================
@@ -107,7 +114,7 @@ export default class Day {
         this.view.addEventListener('orderMoved', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            // dragging.data['date'] = this.date.toJSON();
+            // dragging.data['date'] = this.date.toDateString();
             let order = this.orders.addOrder(dragging.data);
             this.orders.insertBefore(order, e.detail);
             dragging.delete();
@@ -127,7 +134,7 @@ export default class Day {
 
         this.view.addEventListener('drop', (event) => {
             event.preventDefault();
-            dragging.data['date'] = this.date.toJSON();
+            dragging.data['date'] = this.date.toDateString();
             this.orders.insertAsLast(dragging.data);
             dragging.delete();
             this._render();

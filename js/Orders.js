@@ -46,10 +46,11 @@ export default class Orders {
 
     initOrder(orderData) {
         let order = new PostpressItem(orderData);
-        order.update("previousOrder", this.getOrderById(order.data['previousOrder']));
-        order.update("nextOrder", this.getOrderById(order.data['nextOrder']));
+        // order.update("previousOrder", this.getOrderById(order.data['previousOrder']));
+        // order.update("nextOrder", this.getOrderById(order.data['nextOrder']));
         order.update("date", order.data['date'] ? new Date(order.data['date']) : null);
-        this.data.push(order);
+        // this.data.push(order);
+        this.insertAsLast(order.data);
     }
 
     moveBefore(order, before) {
@@ -151,7 +152,7 @@ export default class Orders {
         localStorage.setItem('orders', JSON.stringify(dataForSave));
     }
 
-    constructor (data = []) {
+    constructor (data = [], date) {
         if (data) {
             data.forEach(orderData => this.initOrder(orderData));
         };

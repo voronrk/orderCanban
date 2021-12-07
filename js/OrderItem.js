@@ -9,7 +9,7 @@ export default class OrderItem {
         if ((key=='previousOrder') || (key=='nextOrder') || (key=='previousPart') || (key=='nextPart')) {
             this.data[key] = value ? value.data['id'] : null;
         } else if (key=='date') {
-            this.data[key] = value ? value.toJSON() : value;
+            this.data[key] = value ? value.toDateString() : value;
         } else {
             this.data[key] = value;
         };

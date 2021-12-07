@@ -14,14 +14,14 @@ export default class Week {
     }
 
     _setDays(titles) {
-        let currentDate = new Date(this.startDate.toJSON());
+        let currentDate = new Date(this.startDate.toDateString());
         for (let i=0; i<7; i++) {
-           this.days.push(new Day(titles, this.daysOfWeek[i], currentDate.toJSON(), this.orders));
+           this.days.push(new Day(titles, this.daysOfWeek[i], currentDate.toDateString(), this.orders));
            currentDate.setDate(currentDate.getDate()+1);
         };
         this.render();
-        this.nextDate = new Date(currentDate.toJSON());
-     }
+        this.nextDate = new Date(currentDate.toDateString());
+    }
 
     constructor(startDate, titles, orders) {
         this.orders = orders;
