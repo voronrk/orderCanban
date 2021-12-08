@@ -1,4 +1,5 @@
 import PostpressItem from "./PostpressItem.js";
+import HopeItem from "./HopeItem.js";
 
 export default class Orders {
 
@@ -16,7 +17,7 @@ export default class Orders {
     }
 
     addOrder(orderData) {
-        let order = new PostpressItem(orderData);
+        let order = new this.itemClass(orderData);
         order.update("previousOrder", this.getOrderById(order.data['previousOrder']));
         order.update("nextOrder", this.getOrderById(order.data['nextOrder']));
         order.update("date", order.data['date'] ? new Date(order.data['date']) : null);
@@ -45,7 +46,7 @@ export default class Orders {
     }
 
     initOrder(orderData) {
-        let order = new PostpressItem(orderData);
+        let order = new this.itemClass(orderData);
         // order.update("previousOrder", this.getOrderById(order.data['previousOrder']));
         // order.update("nextOrder", this.getOrderById(order.data['nextOrder']));
         order.update("date", order.data['date'] ? new Date(order.data['date']) : null);
@@ -152,7 +153,8 @@ export default class Orders {
         localStorage.setItem('orders', JSON.stringify(dataForSave));
     }
 
-    constructor (data = [], date) {
+    constructor (data = [], itemClass = PostpressItem, date) {
+        this.itemClass = itemClass;
         if (data) {
             data.forEach(orderData => this.initOrder(orderData));
         };

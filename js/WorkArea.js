@@ -1,5 +1,4 @@
 import Week from "./Week.js";
-import Orders from "./Orders.js";
 
 export default class WorkArea {
 
@@ -17,31 +16,6 @@ export default class WorkArea {
       });         
    }
 
-   getData_JS() {
-      fetch('/js/testOrders.json')
-         .then((res) => res.json())
-         .then ((data) => {
-            this.orders = new Orders(data, this.startDate);
-            this._setWeeks();
-         })
-   }
-
-   // getData() {
-   //    fetch('/getData.php', {
-   //       method: 'POST', 
-   //       headers: {
-   //          'Content-Type': 'application/json'
-   //       },
-   //       body: JSON.stringify({date: this.startDate.toDateString()})
-   //       })
-   //       .then((res) => res.json())
-   //       .then ((data) => {
-   //          console.log(data);
-   //          this.orders = new Orders(data, this.startDate);
-   //          this._setWeeks();
-   //       })
-   // }
-
    _setWeeks(machine) {
       let currentDate = new Date(this.startDate.toDateString());
       this.weeks = [];
@@ -52,14 +26,13 @@ export default class WorkArea {
       this.render();
    }
  
-   constructor(startDate, titles) {
-      this.machine = 'ЛМ';
+   constructor(startDate, titles, machine) {
+      this.machine = machine;
       this.startDate = startDate;
       this.titles = titles;
       this.view = document.createElement('div');
       this.orders = [];
-      this._setWeeks('ЛМ');
-      // this.getData();
+      this._setWeeks(machine);
 
       document.addEventListener('wheel', (event) => {
          if (event.deltaY<0) {
@@ -68,7 +41,7 @@ export default class WorkArea {
          if (event.deltaY>0) {
             this.startDate.setDate(this.startDate.getDate()+7);
          };
-         this._setWeeks();
+         this._setWeeks(this.machine);
       });
 
       document.addEventListener('keyup', (event) => {

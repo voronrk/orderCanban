@@ -91,7 +91,7 @@ export default class Day {
            })
            .then((res) => res.json())
            .then ((data) => {
-                this.orders = new Orders(data);
+                this.orders = new Orders(data['planned']);
                 this._render();
         })
     }
