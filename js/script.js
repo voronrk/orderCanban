@@ -47,18 +47,8 @@ for (const tab of tabs) {
         tabsDeactivate();
         e.target.parentNode.classList.add('is-active');
         const machine = e.target.dataset.machine;
-        // getHope(machine)
-        //     .then(data =>{
-        //         console.log(data);
-        //     });
         renderHope(machine);
         renderWorkArea(machine);        
     });
 };
 
-
-// document.addEventListener('keyup', (event) => {
-//     if (event.key=='PrintScreen') {
-//     console.log(workArea);
-//     }
-// });

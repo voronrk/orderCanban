@@ -20,7 +20,6 @@ export default class HopeItem extends OrderItem {
 
     render() {
         this.view.innerHTML = `${this.orderNum}${this.duration}${this.customer}`;
-        // this.view.innerHTML = `${this.orderNum}${this.duration}${this.customer}${this.options}${this.day}`;
     }
 
     constructor(data) {

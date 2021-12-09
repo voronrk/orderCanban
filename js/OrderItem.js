@@ -14,6 +14,7 @@ export default class OrderItem {
             this.data[key] = value;
         };
         this.render();
+        this.save();
     };
 
     delete() {

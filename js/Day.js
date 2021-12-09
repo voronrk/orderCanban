@@ -16,21 +16,6 @@ export default class Day {
         return duration;
     }
 
-    // insertBefore(order, before) {
-    //     if (order['previousOrder']) {
-    //         order['previousOrder'].update('nextOrder', order['nextOrder']);
-    //     };
-    //     if (order['nextOrder']) {
-    //         order['nextOrder'].update('previousOrder', order['previousOrder']);
-    //     };
-    //     order.update('nextOrder', before);
-    //     order.update('previousOrder', before['previousOrder']);
-    //     before.update('previousOrder', order);
-    //     if (order['previousOrder']) {
-    //         order['previousOrder'].update('nextOrder', order);
-    //     };
-    // }
-
     _renderDate() {
         return this.date.toLocaleDateString();
     }
@@ -120,13 +105,6 @@ export default class Day {
             dragging.update('date', this.date);
             let order = this.orders.addOrder(dragging.data);
             this.orders.insertBefore(order, e.detail);
-            order.save();
-            if (order['previousOrder']) {
-                order['previousOrder'].save();
-            };
-            if (order['nextOrder']) {
-                order['nextOrder'].save();
-            };
             dragging.delete();
             this._render()
         });
@@ -146,10 +124,6 @@ export default class Day {
             event.preventDefault();
             dragging.data['date'] = this.date.toDateString();
             let order = this.orders.insertAsLast(dragging.data);
-            order.save();
-            if (order['previousOrder']) {
-                order['previousOrder'].save();
-            };
             dragging.delete();
             this._render();
         });

@@ -51,7 +51,6 @@ export default class Orders {
         let order = new this.itemClass(orderData);
         order.update("date", order.data['date'] ? new Date(order.data['date']) : null);
         this.data.push(order);
-        // this.insertAsLast(order.data);
     }
 
     setLinks() {

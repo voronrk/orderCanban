@@ -4,11 +4,6 @@ export default class WorkArea {
 
    weeks = [];
 
-   setStartDate_DEPRECATED(date) {
-      this.startDate = new Date(date);
-      this._setWeeks();
-   };
-
    render() {
       this.view.innerHTML = '';
       this.weeks.forEach((week) => {
