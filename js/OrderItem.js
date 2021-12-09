@@ -26,6 +26,23 @@ export default class OrderItem {
         this.view.dispatchEvent(new CustomEvent('orderDeleted', {detail: this, bubbles: true}));
     };
 
+    save() {
+        console.log(this.data);
+        fetch('/back/updateData.php', {
+            method: 'POST', 
+            headers: {
+               'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                data: this.data,
+             })
+            })
+            .then((res) => res.json())
+            .then ((data) => {
+                 console.log(data);
+         })
+    }
+
     constructor(data={}) {
         this.data = data;
         this.view = document.createElement('div');

@@ -24,7 +24,7 @@ function renderWorkArea(machine) {
 }
 
 async function renderHope(machine) {
-    return fetch('/getData.php', {
+    return fetch('/back/getData.php', {
         method: 'POST', 
         headers: {
            'Content-Type': 'application/json'

@@ -79,7 +79,7 @@ export default class Day {
     }
 
     setOrders(machine) {
-        fetch('/getData.php', {
+        fetch('/back/getData.php', {
            method: 'POST', 
            headers: {
               'Content-Type': 'application/json'
@@ -119,6 +119,9 @@ export default class Day {
             dragging.update('date', this.date);
             let order = this.orders.addOrder(dragging.data);
             this.orders.insertBefore(order, e.detail);
+            order.save();
+            order['previousOrder'].save();
+            order['nextOrder'].save();
             dragging.delete();
             this._render()
         });
