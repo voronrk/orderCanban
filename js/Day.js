@@ -121,8 +121,12 @@ export default class Day {
             let order = this.orders.addOrder(dragging.data);
             this.orders.insertBefore(order, e.detail);
             order.save();
-            order['previousOrder'].save();
-            order['nextOrder'].save();
+            if (order['previousOrder']) {
+                order['previousOrder'].save();
+            };
+            if (order['nextOrder']) {
+                order['nextOrder'].save();
+            };
             dragging.delete();
             this._render()
         });
