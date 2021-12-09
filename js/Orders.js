@@ -37,22 +37,29 @@ export default class Orders {
             order.update('nextOrder', null);
             order.update('previousOrder', this.lastOrder());
             order['previousOrder'].update('nextOrder', order);
+            return order;
         } else {
             let order = this.addOrder(orderData);
             order.update('nextOrder', null);
             order.update('previousOrder', null);
+            return order;
         };
         
     }
 
     initOrder(orderData) {
         let order = new this.itemClass(orderData);
-        // order.update("previousOrder", this.getOrderById(order.data['previousOrder']));
-        // order.update("nextOrder", this.getOrderById(order.data['nextOrder']));
         order.update("date", order.data['date'] ? new Date(order.data['date']) : null);
-        // this.data.push(order);
-        this.insertAsLast(order.data);
+        this.data.push(order);
+        // this.insertAsLast(order.data);
     }
+
+    setLinks() {
+        this.data.forEach(orderData => {
+            orderData.update('previousOrder', this.getOrderById(orderData.data['previousOrder']));
+            orderData.update('nextOrder', this.getOrderById(orderData.data['nextOrder']));
+        });
+    }    
 
     moveBefore(order, before) {
         order['previousOrder']['nextOrder'] = order['nextOrder'];
@@ -157,6 +164,6 @@ export default class Orders {
         this.itemClass = itemClass;
         if (data) {
             data.forEach(orderData => this.initOrder(orderData));
-        };
+        };            
     };
 };

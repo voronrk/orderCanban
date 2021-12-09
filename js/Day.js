@@ -92,6 +92,7 @@ export default class Day {
            .then((res) => res.json())
            .then ((data) => {
                 this.orders = new Orders(data['planned']);
+                this.orders.setLinks();
                 this._render();
         })
     }
@@ -140,7 +141,11 @@ export default class Day {
         this.view.addEventListener('drop', (event) => {
             event.preventDefault();
             dragging.data['date'] = this.date.toDateString();
-            this.orders.insertAsLast(dragging.data);
+            let order = this.orders.insertAsLast(dragging.data);
+            order.save();
+            if (order['previousOrder']) {
+                order['previousOrder'].save();
+            };
             dragging.delete();
             this._render();
         });
