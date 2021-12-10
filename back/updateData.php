@@ -17,9 +17,9 @@ $result = db_query("UPDATE `operations`
         `options` = '{$data['options']}',
         `status` = '{$data['status']}',
         `datelock` = '{$data['datelock']}',
-        `previousOrder` = '{$data['previousOrder']}',
-        `nextOrder` = '{$data['nextOrder']}',
-        `previousPart` = '{$data['previousPart']}',
+        `prev` = '{$data['prev']}',
+        `next` = '{$data['next']}',
+        `prevPart` = '{$data['prevPart']}',
         `nextPart` = '{$data['nextPart']}',
         `date` = '{$data['date']}'
     WHERE 

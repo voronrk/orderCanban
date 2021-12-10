@@ -50,7 +50,7 @@ export default class Day {
         if (currentOrder) {
             do {
                 tableBody.appendChild(currentOrder.view);
-                currentOrder = currentOrder['nextOrder'];
+                currentOrder = currentOrder['next'];
             } while (currentOrder);
         };        
         return tableBody;

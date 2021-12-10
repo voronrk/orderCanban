@@ -17,10 +17,10 @@ export default class Week {
             currentDate.setDate(this.startDate.getDate()+i);
             let newDay = new Day(titles, this.daysOfWeek[i], currentDate, currentOrder, this.orders);
             this.view.appendChild(newDay.view);
-            currentOrder = newDay.nextOrder;
+            currentOrder = newDay.next;
         };
         this.nextDate = new Date();
         this.nextDate.setDate(currentDate.getDate()+1);
-        this.nextOrder = currentOrder ? currentOrder : null;
+        this.next = currentOrder ? currentOrder : null;
     }
 }

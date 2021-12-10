@@ -69,21 +69,21 @@ export default class Day {
                 if (this.workHoursCount > this.workHoursCountMax) {
                     let continueOrderData = Object.assign({}, order.data);
                     let continueOrder = new PostpressItem(continueOrderData);
-                    continueOrder.update('previousPart', order);
+                    continueOrder.update('prevPart', order);
                     order.update('nextPart', continueOrder);
                     continueOrder.updateData('id', `${order.data['id']}-1`);
-                    continueOrder.update('previousOrder', order);
-                    continueOrder.update('nextOrder', order['nextOrder']);
-                    order['nextOrder'].update('previousOrder', continueOrder);
-                    order.update('nextOrder', continueOrder);
+                    continueOrder.update('prev', order);
+                    continueOrder.update('next', order['next']);
+                    order['next'].update('prev', continueOrder);
+                    order.update('next', continueOrder);
                     order.updateData('duration', order.data['duration']-(this.workHoursCount - this.workHoursCountMax));
                     continueOrder.updateData('duration', continueOrder.data['duration']-order.data['duration']);
                     this.orders.newOrder(continueOrder);
                 };
                 tableBody.appendChild(order.view);
-                order = order['nextOrder'];
+                order = order['next'];
             } while ((order!=null) && (this.workHoursCount < this.workHoursCountMax));
-            this.nextOrder = order;
+            this.next = order;
         };
         return tableBody;
     };

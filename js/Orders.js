@@ -11,21 +11,21 @@ export default class Orders {
         do {
             i++;
             console.log(order);
-            order = order['nextOrder'] ? Object.assign({}, order['nextOrder']) : null;
+            order = order['next'] ? Object.assign({}, order['next']) : null;
             if (i>100) exit();
         } while (order!=null);
     }
 
     addOrder(orderData) {
         let order = new this.itemClass(orderData);
-        order.update("previousOrder", this.getOrderById(order.data['previousOrder']));
-        order.update("nextOrder", this.getOrderById(order.data['nextOrder']));
+        order.update("prev", this.getOrderById(order.data['prev']));
+        order.update("next", this.getOrderById(order.data['next']));
         order.update("date", order.data['date'] ? new Date(order.data['date']) : null);
-        if (order['previousOrder']) {
-            order['previousOrder'].update('nextOrder', order);
+        if (order['prev']) {
+            order['prev'].update('next', order);
         };
-        if (order['nextOrder']) {
-            order['nextOrder'].update('previousOrder', order);
+        if (order['next']) {
+            order['next'].update('prev', order);
         };
         this.data.push(order);
         return order;
@@ -34,14 +34,14 @@ export default class Orders {
     insertAsLast(orderData) {
         if (this.lastOrder()) {
             let order = this.addOrder(orderData);
-            order.update('nextOrder', null);
-            order.update('previousOrder', this.lastOrder());
-            order['previousOrder'].update('nextOrder', order);
+            order.update('next', null);
+            order.update('prev', this.lastOrder());
+            order['prev'].update('next', order);
             return order;
         } else {
             let order = this.addOrder(orderData);
-            order.update('nextOrder', null);
-            order.update('previousOrder', null);
+            order.update('next', null);
+            order.update('prev', null);
             return order;
         };
         
@@ -55,64 +55,64 @@ export default class Orders {
 
     setLinks() {
         this.data.forEach(orderData => {
-            orderData.update('previousOrder', this.getOrderById(orderData.data['previousOrder']));
-            orderData.update('nextOrder', this.getOrderById(orderData.data['nextOrder']));
+            orderData.update('prev', this.getOrderById(orderData.data['prev']));
+            orderData.update('next', this.getOrderById(orderData.data['next']));
         });
     }    
 
     moveBefore(order, before) {
-        order['previousOrder']['nextOrder'] = order['nextOrder'];
-        order['nextOrder']['previousOrder'] = order['previousOrder'];
+        order['prev']['next'] = order['next'];
+        order['next']['prev'] = order['prev'];
 
-        order['nextOrder'] = before;
-        order['previousOrder'] = before['previousOrder'];
-        before['previousOrder'] = order;
-        if (order['previousOrder']) {
-            order['previousOrder']['nextOrder'] = order;
+        order['next'] = before;
+        order['prev'] = before['prev'];
+        before['prev'] = order;
+        if (order['prev']) {
+            order['prev']['next'] = order;
         };
         // console.log(this.data);
     }
 
     moveAfter(order, after) {
-        order['previousOrder']['nextOrder'] = order['nextOrder'];
-        order['nextOrder']['previousOrder'] = order['previousOrder'];
+        order['prev']['next'] = order['next'];
+        order['next']['prev'] = order['prev'];
 
-        order['nextOrder'] = after['nextOrder'];
-        order['previousOrder'] = after;
-        after['nextOrder'] = order;
-        if (order['nextOrder']) {
-            order['nextOrder']['previousOrder'] = order;
+        order['next'] = after['next'];
+        order['prev'] = after;
+        after['next'] = order;
+        if (order['next']) {
+            order['next']['prev'] = order;
         };
         // console.log(this.data);
     }
 
     insertAfter(order, after) {
-        order['nextOrder'] = after['nextOrder'];
-        order['previousOrder'] = after;
-        after['nextOrder'] = order;
-        if (order['nextOrder']) {
-            order['nextOrder']['previousOrder'] = order;
+        order['next'] = after['next'];
+        order['prev'] = after;
+        after['next'] = order;
+        if (order['next']) {
+            order['next']['prev'] = order;
         };
     }
 
     insertBefore(order, before) {
-        if (order['previousOrder']) {
-            order['previousOrder'].update('nextOrder', order['nextOrder']);
+        if (order['prev']) {
+            order['prev'].update('next', order['next']);
         };
-        if (order['nextOrder']) {
-            order['nextOrder'].update('previousOrder', order['previousOrder']);
+        if (order['next']) {
+            order['next'].update('prev', order['prev']);
         };
-        order.update('nextOrder', before);
-        order.update('previousOrder', before['previousOrder']);
-        before.update('previousOrder', order);
-        if (order['previousOrder']) {
-            order['previousOrder'].update('nextOrder', order);
+        order.update('next', before);
+        order.update('prev', before['prev']);
+        before.update('prev', order);
+        if (order['prev']) {
+            order['prev'].update('next', order);
         };
     }
 
     firstOrder() {
         if (this.data.length>0) {
-            return this.data.filter(order => {return order['previousOrder']===null})[0];
+            return this.data.filter(order => {return order['prev']===null})[0];
         } else {
             return null
         };
@@ -120,7 +120,7 @@ export default class Orders {
 
     lastOrder() {
         if (this.data.length>0) {
-            return this.data.filter(order => {return order['nextOrder']===null})[0];
+            return this.data.filter(order => {return order['next']===null})[0];
         } else {
             return null
         };

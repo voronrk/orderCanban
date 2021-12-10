@@ -1,0 +1,1 @@
+UPDATE `operations` SET `prev`='',`next`='',`prevPart`='',`nextPart`='',`date`='' WHERE 1

@@ -6,7 +6,7 @@ export default class OrderItem {
     };
 
     updateData(key, value) {
-        if ((key=='previousOrder') || (key=='nextOrder') || (key=='previousPart') || (key=='nextPart')) {
+        if ((key=='prev') || (key=='next') || (key=='prevPart') || (key=='nextPart')) {
             this.data[key] = value ? value.data['id'] : null;
         } else if (key=='date') {
             this.data[key] = value ? value.toDateString() : value;
@@ -18,11 +18,11 @@ export default class OrderItem {
     };
 
     delete() {
-        if (this['previousOrder']) {
-            this['previousOrder'].update('nextOrder', this['nextOrder']);
+        if (this['prev']) {
+            this['prev'].update('next', this['next']);
         };
-        if (this['nextOrder']) {
-            this['nextOrder'].update('previousOrder', this['previousOrder']);
+        if (this['next']) {
+            this['next'].update('prev', this['prev']);
         };
         this.view.dispatchEvent(new CustomEvent('orderDeleted', {detail: this, bubbles: true}));
     };

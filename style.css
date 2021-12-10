@@ -80,8 +80,8 @@ td, th {
     cursor:grabbing;
 }
 
-.dragging {
-    border: 1px blue solid;
+.dragging, .clicked {
+    /* border: 1px blue solid; */
     background: rgba(0,0,255,0.2);
 }
 
@@ -89,4 +89,9 @@ td, th {
     height:20px;
     background-color: blue;
     /* opacity: 0.2; */
+}
+
+.context-menu {
+    position:fixed;
+    cursor:pointer;
 }
