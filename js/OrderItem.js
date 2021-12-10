@@ -1,11 +1,11 @@
 export default class OrderItem {
 
-    update(key, value){
+    update(key, value, save=false){
         this[key] = value;
-        this.updateData(key, value);
+        this.updateData(key, value, save);
     };
 
-    updateData(key, value) {
+    updateData(key, value, save=false) {
         if ((key=='prev') || (key=='next') || (key=='prevPart') || (key=='nextPart')) {
             this.data[key] = value ? value.data['id'] : null;
         } else if (key=='date') {
@@ -14,15 +14,15 @@ export default class OrderItem {
             this.data[key] = value;
         };
         this.render();
-        this.save();
+        if (save) this.save();
     };
 
     delete() {
         if (this['prev']) {
-            this['prev'].update('next', this['next']);
+            this['prev'].update('next', this['next'],true);
         };
         if (this['next']) {
-            this['next'].update('prev', this['prev']);
+            this['next'].update('prev', this['prev'],true);
         };
         this.view.dispatchEvent(new CustomEvent('orderDeleted', {detail: this, bubbles: true}));
     };
@@ -30,7 +30,7 @@ export default class OrderItem {
     save() {
         console.log(this.data);
         fetch('/back/updateData.php', {
-            method: 'POST', 
+            method: 'POST',
             headers: {
                'Content-Type': 'application/json'
             },
@@ -40,7 +40,7 @@ export default class OrderItem {
             })
             .then((res) => res.json())
             .then ((data) => {
-                 console.log(data);
+                //  console.log(data);
          })
     }
 

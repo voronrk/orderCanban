@@ -46,7 +46,7 @@ export default class Day {
 
     _tableBody() {
         let tableBody = document.createElement('div');
-        let currentOrder = this.orders.firstOrder();
+        let currentOrder = this.orders.head;
         if (currentOrder) {
             do {
                 tableBody.appendChild(currentOrder.view);
@@ -123,7 +123,7 @@ export default class Day {
         this.view.addEventListener('drop', (event) => {
             event.preventDefault();
             dragging.data['date'] = this.date.toDateString();
-            let order = this.orders.insertAsLast(dragging.data);
+            let order = this.orders.append(dragging.data);
             dragging.delete();
             this._render();
         });

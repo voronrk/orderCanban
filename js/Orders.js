@@ -1,12 +1,11 @@
 import PostpressItem from "./PostpressItem.js";
-import HopeItem from "./HopeItem.js";
 
 export default class Orders {
 
     data = [];
 
-    debug(firstOrder){
-        let order = Object.assign({}, this.firstOrder());
+    debug(){
+        let order = Object.assign({}, this.head);
         let i=0;
         do {
             i++;
@@ -16,35 +15,50 @@ export default class Orders {
         } while (order!=null);
     }
 
-    addOrder(orderData) {
+    get head() {
+        if (this.data.length>0) {
+            return this.data.filter(order => {return order['prev']===null})[0];
+        } else {
+            return null
+        };
+    };
+
+    get tail() {
+        if (this.data.length>0) {
+            return this.data.filter(order => {return order['next']===null})[0];
+        } else {
+            return null
+        };
+    };
+
+    append(orderData) {
+        if (this.tail) {
+            let order = this.addOrder(orderData, false);
+            order.update('next', null);
+            order.update('prev', this.tail,true);
+            order['prev'].update('next', order,true);
+            return order;
+        } else {
+            let order = this.addOrder(orderData, false);
+            order.update('next', null);
+            order.update('prev', null, true);
+            return order;
+        };
+    }
+
+    addOrder(orderData, save=false) {
         let order = new this.itemClass(orderData);
         order.update("prev", this.getOrderById(order.data['prev']));
         order.update("next", this.getOrderById(order.data['next']));
-        order.update("date", order.data['date'] ? new Date(order.data['date']) : null);
+        order.update("date", order.data['date'] ? new Date(order.data['date']) : null, save);
         if (order['prev']) {
-            order['prev'].update('next', order);
+            order['prev'].update('next', order, true);
         };
         if (order['next']) {
-            order['next'].update('prev', order);
+            order['next'].update('prev', order, true);
         };
         this.data.push(order);
         return order;
-    }
-
-    insertAsLast(orderData) {
-        if (this.lastOrder()) {
-            let order = this.addOrder(orderData);
-            order.update('next', null);
-            order.update('prev', this.lastOrder());
-            order['prev'].update('next', order);
-            return order;
-        } else {
-            let order = this.addOrder(orderData);
-            order.update('next', null);
-            order.update('prev', null);
-            return order;
-        };
-        
     }
 
     initOrder(orderData) {
@@ -97,35 +111,19 @@ export default class Orders {
 
     insertBefore(order, before) {
         if (order['prev']) {
-            order['prev'].update('next', order['next']);
+            order['prev'].update('next', order['next'],true);
         };
         if (order['next']) {
-            order['next'].update('prev', order['prev']);
+            order['next'].update('prev', order['prev'],true);
         };
         order.update('next', before);
-        order.update('prev', before['prev']);
-        before.update('prev', order);
+        order.update('prev', before['prev'], true);
+        before.update('prev', order,true);
         if (order['prev']) {
-            order['prev'].update('next', order);
+            order['prev'].update('next', order, true);
         };
     }
 
-    firstOrder() {
-        if (this.data.length>0) {
-            return this.data.filter(order => {return order['prev']===null})[0];
-        } else {
-            return null
-        };
-    };
-
-    lastOrder() {
-        if (this.data.length>0) {
-            return this.data.filter(order => {return order['next']===null})[0];
-        } else {
-            return null
-        };
-    };
-    
     getOrderById(id) {
         if (id) {
             return this.data.filter(order => {return order.data['id']==id})[0];

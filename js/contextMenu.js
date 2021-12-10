@@ -16,6 +16,6 @@ export default class ContextMenu {
             e.stopPropagation();
             this.view.classList.add('is-hidden');
             this.view.parentNode.classList.remove('clicked');
-        });
+        }, false);
     }
 }
