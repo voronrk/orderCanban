@@ -48,7 +48,7 @@ for (const tab of tabs) {
         e.target.parentNode.classList.add('is-active');
         const machine = e.target.dataset.machine;
         renderHope(machine);
-        renderWorkArea(machine);        
+        renderWorkArea(machine);
     });
 };
 

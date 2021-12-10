@@ -148,7 +148,7 @@ export default class Orders {
         // }
     };
 
-    save() {
+    save_DEPRECATED() {
         let dataForSave = [];
         this.data.forEach((item) => {
             dataForSave.push(item.data);

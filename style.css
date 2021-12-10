@@ -92,6 +92,7 @@ td, th {
 }
 
 .context-menu {
+    background-color:white;
     position:fixed;
     cursor:pointer;
 }

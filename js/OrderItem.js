@@ -1,3 +1,5 @@
+import ContextMenu from "./contextMenu.js";
+
 export default class OrderItem {
 
     update(key, value, save=false){
@@ -24,6 +26,9 @@ export default class OrderItem {
         if (this['next']) {
             this['next'].update('prev', this['prev'],true);
         };
+        this.update('prev',null);
+        this.update('next',null);
+        this.update('date',null,true);
         this.view.dispatchEvent(new CustomEvent('orderDeleted', {detail: this, bubbles: true}));
     };
 
@@ -53,6 +58,13 @@ export default class OrderItem {
         //=============for debug=================
         this.view.addEventListener('click', () => console.log(this));
         //=======================================
+
+        this.view.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            const menu = new ContextMenu(this, e.x, e.y);
+            this.view.classList.add('clicked');
+            this.view.appendChild(menu.view);
+        })
 
         this.view.addEventListener('dragstart', (event) => {
             event.target.classList.add('dragging');
