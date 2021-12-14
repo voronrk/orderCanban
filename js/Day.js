@@ -102,10 +102,12 @@ export default class Day {
         this.view.addEventListener('orderMoved', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            dragging.update('date', this.date);
-            let order = this.orders.addOrder(dragging.data);
-            this.orders.insertBefore(order, e.detail);
+            const newOrderData = Object.assign({}, dragging.data);
             dragging.delete();
+            newOrderData['date'] = this.date.toDateString();
+            let order = this.orders.addOrder(newOrderData);
+            this.orders.insertBefore(order, e.detail);
+            order.save();
             this._render()
         });
 
@@ -122,9 +124,11 @@ export default class Day {
 
         this.view.addEventListener('drop', (event) => {
             event.preventDefault();
-            dragging.data['date'] = this.date.toDateString();
-            let order = this.orders.append(dragging.data);
+            const newOrderData = Object.assign({}, dragging.data);
             dragging.delete();
+            newOrderData['date'] = this.date.toDateString();
+            let order = this.orders.append(newOrderData);
+            order.save();
             this._render();
         });
     };

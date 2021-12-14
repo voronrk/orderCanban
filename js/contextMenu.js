@@ -4,7 +4,7 @@ export default class ContextMenu {
         const items = document.createElement('div');
         items.innerHTML = `
             <div class="panel-block" id='reject'>Отменить операцию</div>
-            <div class="panel-block" id='2'>111111</div>
+            <div class="panel-block" id='slice'>Разделить заказ</div>
             <div class="panel-block" id='3'>111111</div>
         `;
         return items;
@@ -26,10 +26,11 @@ export default class ContextMenu {
             e.stopPropagation();
             this.view.classList.add('is-hidden');
             this.view.parentNode.classList.remove('clicked');
-            console.log(e.target.id);
             if (e.target.id=='reject') {
                 this.order.delete();
-                
+                this.view.dispatchEvent(new CustomEvent('orderRejected', {detail: this, bubbles: true}));
+                event.preventDefault();
+                event.stopPropagation();
             }
         });
     }

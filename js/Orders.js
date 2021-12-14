@@ -33,29 +33,36 @@ export default class Orders {
 
     append(orderData) {
         if (this.tail) {
+            console.log(this.tail);
             let order = this.addOrder(orderData, false);
-            order.update('next', null);
-            order.update('prev', this.tail,true);
-            order['prev'].update('next', order,true);
+            order.update({
+                next: null,
+                prev: this.tail
+            });
+            order['prev'].update({next: order});
             return order;
         } else {
             let order = this.addOrder(orderData, false);
-            order.update('next', null);
-            order.update('prev', null, true);
+            order.update({
+                next: null,
+                prev: null
+            });
             return order;
         };
     }
 
-    addOrder(orderData, save=false) {
+    addOrder(orderData) {
         let order = new this.itemClass(orderData);
-        order.update("prev", this.getOrderById(order.data['prev']));
-        order.update("next", this.getOrderById(order.data['next']));
-        order.update("date", order.data['date'] ? new Date(order.data['date']) : null, save);
+        order.update({
+            prev: this.getOrderById(order.data['prev']),
+            next: this.getOrderById(order.data['next']),
+            date: order.data['date'] ? new Date(order.data['date']) : null
+        });
         if (order['prev']) {
-            order['prev'].update('next', order, true);
+            order['prev'].update({next: order});
         };
         if (order['next']) {
-            order['next'].update('prev', order, true);
+            order['next'].update({prev: order});
         };
         this.data.push(order);
         return order;
@@ -63,18 +70,18 @@ export default class Orders {
 
     initOrder(orderData) {
         let order = new this.itemClass(orderData);
-        order.update("date", order.data['date'] ? new Date(order.data['date']) : null);
+        order.update({date: order.data['date'] ? new Date(order.data['date']) : null});
         this.data.push(order);
     }
 
     setLinks() {
         this.data.forEach(orderData => {
-            orderData.update('prev', this.getOrderById(orderData.data['prev']));
-            orderData.update('next', this.getOrderById(orderData.data['next']));
+            orderData.update({prev: this.getOrderById(orderData.data['prev'])});
+            orderData.update({next: this.getOrderById(orderData.data['next'])});
         });
     }    
 
-    moveBefore(order, before) {
+    moveBefore_DEPRECATED(order, before) {
         order['prev']['next'] = order['next'];
         order['next']['prev'] = order['prev'];
 
@@ -87,7 +94,7 @@ export default class Orders {
         // console.log(this.data);
     }
 
-    moveAfter(order, after) {
+    moveAfter_DEPRECATED(order, after) {
         order['prev']['next'] = order['next'];
         order['next']['prev'] = order['prev'];
 
@@ -100,7 +107,7 @@ export default class Orders {
         // console.log(this.data);
     }
 
-    insertAfter(order, after) {
+    insertAfter_DEPRECATED(order, after) {
         order['next'] = after['next'];
         order['prev'] = after;
         after['next'] = order;
@@ -110,17 +117,21 @@ export default class Orders {
     }
 
     insertBefore(order, before) {
-        if (order['prev']) {
-            order['prev'].update('next', order['next'],true);
+        // if (order['prev']) {
+        //     order['prev'].update({next: order['next']});
+        // };
+        // if (order['next']) {
+        //     order['next'].update({prev: order['prev']});
+        // };
+        let updateCurrent = {
+            prev: before['prev'],
+            next: before,
         };
-        if (order['next']) {
-            order['next'].update('prev', order['prev'],true);
-        };
-        order.update('next', before);
-        order.update('prev', before['prev'], true);
-        before.update('prev', order,true);
+        order.update(updateCurrent);
+
+        before.update({prev: order});
         if (order['prev']) {
-            order['prev'].update('next', order, true);
+            order['prev'].update({next: order});
         };
     }
 
@@ -134,13 +145,13 @@ export default class Orders {
 
     getOrdersByDate(date) {
         if (date) {
-            return this.data.filter(order => {return order['date'].toLocaleDateString()==date.toLocaleDateString()});
+            return this.data.filter(order => {return order['date'].toDateString()==date.toDateString()});
         } else {
             return this.data.filter(order => {return order['date']==null});
         }
     };
 
-    getOrdersByDateRange(date) {
+    getOrdersByDateRange_NOT_USED(date) {
         // if (date) {
         //     return this.data.filter(order => {return order['date']>=date});
         // } else {

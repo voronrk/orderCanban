@@ -13,7 +13,9 @@ export default class Hope {
     constructor(orders) {
         this.orders = new Orders(orders, HopeItem);
         this.view = document.createElement('div');
-        this._render();        
+        this._render();
+
+
 
         this.view.addEventListener('orderDeleted', (e) => {
             this.orders.data.splice(this.orders.data.indexOf(e.detail),1);
