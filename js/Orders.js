@@ -33,7 +33,6 @@ export default class Orders {
 
     append(orderData) {
         if (this.tail) {
-            console.log(this.tail);
             let order = this.addOrder(orderData, false);
             order.update({
                 next: null,

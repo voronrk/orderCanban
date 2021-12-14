@@ -23,14 +23,14 @@ export default class ContextMenu {
         this._render(x,y);
 
         this.view.addEventListener('click', (e) => {
+            e.preventDefault();
             e.stopPropagation();
             this.view.classList.add('is-hidden');
             this.view.parentNode.classList.remove('clicked');
             if (e.target.id=='reject') {
+                const rejectedData = Object.assign({}, this.order.data);
+                this.order.view.dispatchEvent(new CustomEvent('orderRejected', {detail: rejectedData, bubbles: true}));
                 this.order.delete();
-                this.view.dispatchEvent(new CustomEvent('orderRejected', {detail: this, bubbles: true}));
-                event.preventDefault();
-                event.stopPropagation();
             }
         });
     }

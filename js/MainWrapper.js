@@ -11,17 +11,14 @@ export default class MainWrapper {
    }
 
    renderWorkArea() {
-        const workField = document.querySelector('#work-field');
         let startDate = new Date();
         startDate.setDate(new Date().getDate()-new Date().getDay()+1);
         startDate = new Date(startDate.toDateString());
-        workField.innerHTML = '';
-        this.workArea = new WorkArea(startDate, this.titles, this.machine);
-        workField.appendChild(this.workArea.view);
+        let workArea = new WorkArea(startDate, this.titles, this.machine);
+        this.workField.appendChild(workArea.view);
     }
 
    renderHope() {
-        const hopeField = document.querySelector('#hope-field');
         fetch('/back/getData.php', {
             method: 'POST', 
             headers: {
@@ -33,24 +30,34 @@ export default class MainWrapper {
             })
             .then((res) => res.json())
             .then ((data) => {
-                hopeField.innerHTML = '';
                 this.hope = new Hope(data['notplanned']);
-                hopeField.appendChild(this.hope.view);
+                this.hopeField.appendChild(this.hope.view);
             });
     }
 
      constructor(titles, machine) {
+        this.workField = document.createElement('div');
+        this.workField.classList.add('column');
+        this.hopeField = document.createElement('div');
+        this.hopeField.classList.add('column', 'is-1');
+
         this.machine = machine;
-        // this.startDate = startDate;
         this.titles = titles;
-        this.view = document.createElement('div');
-        this.renderHope();
-        this.renderWorkArea();
+        
+        this.renderHope()
+        this.renderWorkArea()
+        
+        this.view = document.querySelector('#main-wrapper');
+        this.view.innerHTML = '';
+        this.view.appendChild(this.hopeField);
+        this.view.appendChild(this.workField);
+        console.log(this.view);
 
         this.view.addEventListener('orderRejected', (e) => {
             console.log('rejected');
             console.log(e.detail);
-            this.hope.orders.push(e.detail);
+            console.log(this.hope);
+            this.hope.orders.addOrder(e.detail);
             this.hope._render();
         })
    }
