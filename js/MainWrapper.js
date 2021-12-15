@@ -37,7 +37,7 @@ export default class MainWrapper {
 
      constructor(titles, machine) {
         this.workField = document.createElement('div');
-        this.workField.classList.add('column');
+        this.workField.classList.add('column', 'work-field');
         this.hopeField = document.createElement('div');
         this.hopeField.classList.add('column', 'is-1');
 

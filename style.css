@@ -1,7 +1,12 @@
 .container {
-    overflow-x:scroll;
+    /* overflow-x:scroll; */
     height:95vh;
     max-width:95vw !important;
+}
+
+.work-field {
+    overflow-x:scroll;
+    /* max-width:95vw */
 }
 
 .columns {
