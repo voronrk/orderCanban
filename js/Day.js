@@ -6,6 +6,27 @@ export default class Day {
 
     orders = [];
 
+    workHoursCountMaxField() {
+        let field = document.createElement('div');
+        field.classList.add('column', 'column-order', 'has-text-centered', 'is-size-6', 'is-10');
+        field.innerText = `${this.workHoursCountMax} часов`;
+        field.addEventListener('click', (e) => {
+            field.innerHTML = '';
+            const inputField = document.createElement('input');
+            inputField.type = 'text';
+            inputField.value = this.workHoursCountMax;
+            field.appendChild(inputField);
+            inputField.focus();
+            e.stopPropagation();
+            inputField.addEventListener('blur', (e) => {
+                this.workHoursCountMax = inputField.value;
+                this._render();
+                e.stopPropagation();
+            });
+        });
+        return field;
+    }
+
     get workHoursCount() {
         let duration = 0;
         if (this.orders.data.length>0) {
@@ -26,8 +47,8 @@ export default class Day {
         tableFooter.innerHTML = `
             <div class="column column-order has-text-centered is-size-6 is-1"></div>
             <div class="column column-order has-text-centered is-size-6 is-1 ${this.workHoursCount>this.workHoursCountMax ? 'has-text-danger' : 'has-text-success'}">${this.workHoursCount}</div>
-            <div class="column column-order has-text-centered is-size-6 is-10">${this.workHoursCountMax} часов</div>
         `;
+        tableFooter.appendChild(this.workHoursCountMaxField());
         return tableFooter;
     }
 
