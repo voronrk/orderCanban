@@ -25,7 +25,7 @@ export default class Day {
         tableFooter.classList.add('columns','is-gapless','has-text-weight-bold');
         tableFooter.innerHTML = `
             <div class="column column-order has-text-centered is-size-6 is-1"></div>
-            <div class="column column-order has-text-centered is-size-6 is-1">${this.workHoursCount}</div>
+            <div class="column column-order has-text-centered is-size-6 is-1 ${this.workHoursCount>this.workHoursCountMax ? 'has-text-danger' : 'has-text-success'}">${this.workHoursCount}</div>
             <div class="column column-order has-text-centered is-size-6 is-10">${this.workHoursCountMax} часов</div>
         `;
         return tableFooter;
