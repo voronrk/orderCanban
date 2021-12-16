@@ -33,6 +33,25 @@ export default class Orders {
 
     append(orderData) {
         if (this.tail) {
+            let order = this.addOrder(orderData);
+            order.update({
+                next: null,
+                prev: this.tail,
+                date: this.date
+            });
+            order['prev'].update({next: order});
+        } else {
+            let order = this.addOrder(orderData);
+            order.update({
+                next: null,
+                prev: null,
+                date: this.date
+            });
+        };
+    }
+    
+    append_DEPRECATED(orderData) {
+        if (this.tail) {
             let order = this.addOrder(orderData, false);
             order.update({
                 next: null,
@@ -116,15 +135,10 @@ export default class Orders {
     }
 
     insertBefore(order, before) {
-        // if (order['prev']) {
-        //     order['prev'].update({next: order['next']});
-        // };
-        // if (order['next']) {
-        //     order['next'].update({prev: order['prev']});
-        // };
         let updateCurrent = {
             prev: before['prev'],
             next: before,
+            date: before['date']
         };
         order.update(updateCurrent);
 
@@ -167,7 +181,8 @@ export default class Orders {
         localStorage.setItem('orders', JSON.stringify(dataForSave));
     }
 
-    constructor (data = [], itemClass = PostpressItem, date) {
+    constructor (data = [], date, itemClass = PostpressItem) {
+        this.date = date;
         this.itemClass = itemClass;
         if (data) {
             data.forEach(orderData => this.initOrder(orderData));

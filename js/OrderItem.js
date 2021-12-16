@@ -12,8 +12,8 @@ export default class OrderItem {
             this[key] = data[key];
             this.updateData(key, data[key]);
         };
-        this.render();
         this.save();
+        this.render();
     };
 
     updateData(key, value) {
@@ -35,17 +35,16 @@ export default class OrderItem {
         if (this['next']) {
             this['next'].update({prev: this['prev']});
         };
-        let updateCurrent = {
-            prev: null,
-            next: null,
-            date: null
-        };
-        this.update(updateCurrent);
+        // let updateCurrent = {
+        //     prev: null,
+        //     next: null,
+        //     date: null
+        // };
+        // this.update(updateCurrent);
         this.view.dispatchEvent(new CustomEvent('orderDeleted', {detail: this, bubbles: true}));
     };
 
     save() {
-        // console.log(this.data);
         fetch('/back/updateData.php', {
             method: 'POST',
             headers: {
@@ -88,10 +87,11 @@ export default class OrderItem {
         });
 
         this.view.addEventListener('drop', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
              if (event.target.classList.contains('column-order')) {
                 this.view.dispatchEvent(new CustomEvent('orderMoved', {detail: this, bubbles: true}));
-                event.preventDefault();
-                event.stopPropagation();
+
             };
         });
     }

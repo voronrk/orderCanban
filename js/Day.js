@@ -97,7 +97,7 @@ export default class Day {
            })
            .then((res) => res.json())
            .then ((data) => {
-                this.orders = new Orders(data['planned']);
+                this.orders = new Orders(data['planned'], this.date);
                 this.orders.setLinks();
                 this._render();
         })
@@ -123,33 +123,28 @@ export default class Day {
         this.view.addEventListener('orderMoved', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            const newOrderData = Object.assign({}, dragging.data);
-            dragging.delete();
-            newOrderData['date'] = this.date.toDateString();
-            let order = this.orders.addOrder(newOrderData);
+            let order = this.orders.addOrder(dragging.data);
             this.orders.insertBefore(order, e.detail);
-            order.save();
+            dragging.delete();
             this._render()
         });
 
         this.view.addEventListener('orderDeleted', (e) => {
-            this.orders.data.splice(this.orders.data.indexOf(e.detail),1);
-            this._render()
             e.preventDefault();
-            e.stopPropagation()
+            e.stopPropagation();
+            this.orders.data.splice(this.orders.data.indexOf(e.detail),1);
+            this._render();
          });
 
         this.view.addEventListener('dragover', (event)=> {
             event.preventDefault();
         },false);
 
-        this.view.addEventListener('drop', (event) => {
-            event.preventDefault();
-            const newOrderData = Object.assign({}, dragging.data);
+        this.view.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.orders.append(dragging.data);
             dragging.delete();
-            newOrderData['date'] = this.date.toDateString();
-            let order = this.orders.append(newOrderData);
-            order.save();
             this._render();
         });
     };

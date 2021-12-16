@@ -51,7 +51,6 @@ export default class MainWrapper {
         this.view.innerHTML = '';
         this.view.appendChild(this.hopeField);
         this.view.appendChild(this.workField);
-        console.log(this.view);
 
         this.view.addEventListener('orderRejected', (e) => {
             console.log('rejected');
