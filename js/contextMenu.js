@@ -28,9 +28,8 @@ export default class ContextMenu {
             this.view.classList.add('is-hidden');
             this.view.parentNode.classList.remove('clicked');
             if (e.target.id=='reject') {
-                const rejectedData = Object.assign({}, this.order.data);
-                this.order.view.dispatchEvent(new CustomEvent('orderRejected', {detail: rejectedData, bubbles: true}));
-                this.order.delete();
+                globalThis.dragging = this.order;
+                this.order.view.dispatchEvent(new CustomEvent('orderRejected', {bubbles: true}));
             }
         });
     }

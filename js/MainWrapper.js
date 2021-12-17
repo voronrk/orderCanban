@@ -53,10 +53,15 @@ export default class MainWrapper {
         this.view.appendChild(this.workField);
 
         this.view.addEventListener('orderRejected', (e) => {
-            console.log('rejected');
-            console.log(e.detail);
-            console.log(this.hope);
-            this.hope.orders.addOrder(e.detail);
+            e.preventDefault();
+            e.stopPropagation();
+            dragging.delete();
+            this.order.update({
+                prev: null,
+                next: null,
+                date: null
+            });
+            this.hope.orders.append(dragging.data);
             this.hope._render();
         })
    }

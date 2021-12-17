@@ -1,12 +1,8 @@
 'use sctrict';
-import WorkArea from "./WorkArea.js";
-import Hope from "./Hope.js";
-import PostpressItem from "./PostpressItem.js";
 import MainWrapper from "./MainWrapper.js";
 
-// const workField = document.querySelector('#work-field');
-// const hopeField = document.querySelector('#hope-field');
 const tabs = document.querySelectorAll('#tabs>li>a');
+const clear = document.querySelector('#clear-base');
 
 const titles = ['№','Время','Заказчик','Параметры заказа', 'Дата'];
 let dragging = {};
@@ -14,6 +10,14 @@ let dragging = {};
 function tabsDeactivate() {
     for (const tab of tabs) {tab.parentNode.classList.remove('is-active')};
 };
+
+clear.addEventListener('click', () => {
+    fetch('/back/clearBase.php')
+        .then((res) => res.json())
+        .then ((answer) => {
+            console.log(answer);
+        });
+})
 
 for (const tab of tabs) {
     tab.addEventListener('click', (e) => {

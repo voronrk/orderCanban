@@ -35,12 +35,6 @@ export default class OrderItem {
         if (this['next']) {
             this['next'].update({prev: this['prev']});
         };
-        // let updateCurrent = {
-        //     prev: null,
-        //     next: null,
-        //     date: null
-        // };
-        // this.update(updateCurrent);
         this.view.dispatchEvent(new CustomEvent('orderDeleted', {detail: this, bubbles: true}));
     };
 
@@ -91,7 +85,6 @@ export default class OrderItem {
             event.stopPropagation();
              if (event.target.classList.contains('column-order')) {
                 this.view.dispatchEvent(new CustomEvent('orderMoved', {detail: this, bubbles: true}));
-
             };
         });
     }

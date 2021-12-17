@@ -17,7 +17,7 @@ session_start();
 <nav class="navbar has-background-light">
     <div class="navbar-start">
         <div class="navbar-item">
-        <button class="button is-primary has-text-weight-bold is-small <?php echo ($_SESSION['auth'] ? '' : 'is-hidden');?>">Создать</button>
+        <button class="button is-primary has-text-weight-bold is-small <?php echo ($_SESSION['auth'] ? '' : 'is-hidden');?>" id="clear-base">Очистить</button>
         </div>
     </div>
     <div class="navbar-end">
