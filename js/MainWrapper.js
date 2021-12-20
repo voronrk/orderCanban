@@ -56,12 +56,12 @@ export default class MainWrapper {
             e.preventDefault();
             e.stopPropagation();
             dragging.delete();
-            this.order.update({
+            dragging.update({
                 prev: null,
                 next: null,
                 date: null
             });
-            this.hope.orders.append(dragging.data);
+            this.hope.orders.initOrder(dragging.data);
             this.hope._render();
         })
    }

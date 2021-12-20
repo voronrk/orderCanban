@@ -123,9 +123,9 @@ export default class Day {
         this.view.addEventListener('orderMoved', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            let order = this.orders.addOrder(dragging.data);
-            this.orders.insertBefore(order, e.detail);
             dragging.delete();
+            let order = this.orders.initOrder(dragging.data);
+            this.orders.insertBefore(order, e.detail);
             this._render()
         });
 
@@ -143,8 +143,9 @@ export default class Day {
         this.view.addEventListener('drop', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            this.orders.append(dragging.data);
             dragging.delete();
+            let order = this.orders.initOrder(dragging.data);
+            this.orders.insertAfter(order, this.orders.tail);
             this._render();
         });
     };

@@ -7,12 +7,12 @@ export default class OrderItem {
         this.updateData(key, value, save);
     };
     
-    update(data){
+    update(data, save=true){
         for (let key in data) {
             this[key] = data[key];
-            this.updateData(key, data[key]);
+            if (save) {this.updateData(key, data[key])};
         };
-        this.save();
+        if (save) {this.save()};
         this.render();
     };
 
@@ -24,8 +24,6 @@ export default class OrderItem {
         } else {
             this.data[key] = value;
         };
-        // this.render();
-        // if (save) this.save();
     };
 
     delete() {
@@ -84,6 +82,7 @@ export default class OrderItem {
             event.preventDefault();
             event.stopPropagation();
              if (event.target.classList.contains('column-order')) {
+                dragging.delete();
                 this.view.dispatchEvent(new CustomEvent('orderMoved', {detail: this, bubbles: true}));
             };
         });

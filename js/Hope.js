@@ -16,10 +16,10 @@ export default class Hope {
         this._render();
 
         this.view.addEventListener('orderDeleted', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             this.orders.data.splice(this.orders.data.indexOf(e.detail),1);
             this._render()
-            e.preventDefault();
-            e.stopPropagation()
          });
     }
 }

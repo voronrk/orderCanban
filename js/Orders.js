@@ -49,25 +49,6 @@ export default class Orders {
             });
         };
     }
-    
-    append_DEPRECATED(orderData) {
-        if (this.tail) {
-            let order = this.addOrder(orderData, false);
-            order.update({
-                next: null,
-                prev: this.tail
-            });
-            order['prev'].update({next: order});
-            return order;
-        } else {
-            let order = this.addOrder(orderData, false);
-            order.update({
-                next: null,
-                prev: null
-            });
-            return order;
-        };
-    }
 
     addOrder(orderData) {
         let order = new this.itemClass(orderData);
@@ -88,51 +69,17 @@ export default class Orders {
 
     initOrder(orderData) {
         let order = new this.itemClass(orderData);
-        order.update({date: order.data['date'] ? new Date(order.data['date']) : null});
+        order.update({date: order.data['date'] ? new Date(order.data['date']) : this.date ? new Date(this.date.toDateString()) : null}, false);
         this.data.push(order);
+        return order;
     }
 
     setLinks() {
         this.data.forEach(orderData => {
-            orderData.update({prev: this.getOrderById(orderData.data['prev'])});
-            orderData.update({next: this.getOrderById(orderData.data['next'])});
+            orderData.update({prev: orderData.data['prev'] ? this.getOrderById(orderData.data['prev']) : null}, false);
+            orderData.update({next: (orderData.data['next']) ? this.getOrderById(orderData.data['next']) : null}, false);
         });
     }    
-
-    moveBefore_DEPRECATED(order, before) {
-        order['prev']['next'] = order['next'];
-        order['next']['prev'] = order['prev'];
-
-        order['next'] = before;
-        order['prev'] = before['prev'];
-        before['prev'] = order;
-        if (order['prev']) {
-            order['prev']['next'] = order;
-        };
-        // console.log(this.data);
-    }
-
-    moveAfter_DEPRECATED(order, after) {
-        order['prev']['next'] = order['next'];
-        order['next']['prev'] = order['prev'];
-
-        order['next'] = after['next'];
-        order['prev'] = after;
-        after['next'] = order;
-        if (order['next']) {
-            order['next']['prev'] = order;
-        };
-        // console.log(this.data);
-    }
-
-    insertAfter_DEPRECATED(order, after) {
-        order['next'] = after['next'];
-        order['prev'] = after;
-        after['next'] = order;
-        if (order['next']) {
-            order['next']['prev'] = order;
-        };
-    }
 
     insertBefore(order, before) {
         let updateCurrent = {
@@ -145,6 +92,29 @@ export default class Orders {
         before.update({prev: order});
         if (order['prev']) {
             order['prev'].update({next: order});
+        };
+    }
+
+    insertAfter(order, after) {
+        if (this.tail) {
+            let updateCurrent = {
+                prev: after,
+                next: after['next'],
+                date: after['date']
+            };
+            order.update(updateCurrent);
+
+            after.update({next: order});
+            if (order['next']) {
+                order['next'].update({pre: order});
+            };
+        } else {
+            let updateCurrent = {
+                prev: null,
+                next: null,
+                date: this.date
+            };
+            order.update(updateCurrent);
         };
     }
 
@@ -163,23 +133,6 @@ export default class Orders {
             return this.data.filter(order => {return order['date']==null});
         }
     };
-
-    getOrdersByDateRange_NOT_USED(date) {
-        // if (date) {
-        //     return this.data.filter(order => {return order['date']>=date});
-        // } else {
-        //     return this.data.filter(order => {return order['date']==null});
-        // }
-    };
-
-    save_DEPRECATED() {
-        let dataForSave = [];
-        this.data.forEach((item) => {
-            dataForSave.push(item.data);
-        });
-        console.log(dataForSave);
-        localStorage.setItem('orders', JSON.stringify(dataForSave));
-    }
 
     constructor (data = [], date, itemClass = PostpressItem) {
         this.date = date;
