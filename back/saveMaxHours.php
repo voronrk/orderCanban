@@ -8,16 +8,16 @@ $data = $params['data'];
 // $log = fopen('maxHours.log', 'a');
 // fwrite($log, print_r($data,true));
 
-$check = db_query("SELECT * FROM `days` WHERE `date`='{$data['date']}'; ")->fetch()['hours'];
+$check = db_query("SELECT * FROM `days` WHERE `date`='{$date}' AND `machine`='{$machine}'; ")->fetch()['hours'];
 
 if ($check) {
     $result = db_query("UPDATE `days` 
         SET 
             `hours` = '{$data['hours']}'
         WHERE 
-            `date`='{$data['date']}'; ");
+        `date`='{$date}' AND `machine`='{$machine}'; ");
 } else {
-    $result = db_query("INSERT INTO `days`(`date`, `hours`) VALUES ('{$data['date']}','{$data['hours']}'); ");
+    $result = db_query("INSERT INTO `days`(`date`, `machine`, `hours`) VALUES ('{$data['date']}','{$data['machine']}','{$data['hours']}'); ");
 }
 
 // fwrite($log, print_r($result,true));

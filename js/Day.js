@@ -112,6 +112,7 @@ export default class Day {
     _saveMaxHours() {
         const data = {
             date: this.date.toDateString(),
+            machine: this.machine,
             hours: this.workHoursCountMax
         };
         fetch('/back/saveMaxHours.php', {
@@ -133,6 +134,7 @@ export default class Day {
         this.dayOfWeek = dayOfWeek;
         this.date = new Date(date);
         this.titles = titles;
+        this.machine = machine;
         this.view = document.createElement('div');
         this.view.classList.add('column', 'column-day');
 
