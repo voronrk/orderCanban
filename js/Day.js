@@ -20,6 +20,7 @@ export default class Day {
             e.stopPropagation();
             inputField.addEventListener('blur', (e) => {
                 this.workHoursCountMax = inputField.value;
+                this._saveMaxHours();
                 this._render();
                 e.stopPropagation();
             });
@@ -97,10 +98,35 @@ export default class Day {
            })
            .then((res) => res.json())
            .then ((data) => {
+                if (data['maxhours']) {
+                    this.workHoursCountMax = data['maxhours']
+                } else {
+                    this._saveMaxHours();
+                };
                 this.orders = new Orders(data['planned'], this.date);
                 this.orders.setLinks();
                 this._render();
         })
+    }
+
+    _saveMaxHours() {
+        const data = {
+            date: this.date.toDateString(),
+            hours: this.workHoursCountMax
+        };
+        fetch('/back/saveMaxHours.php', {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                data: data,
+            })
+            })
+            .then((res) => res.json())
+            .then ((data) => {
+                //  console.log(data);
+         })
     }
 
     constructor(titles, dayOfWeek, date, orders, machine) {

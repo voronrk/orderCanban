@@ -30,6 +30,11 @@ export default class ContextMenu {
             if (e.target.id=='reject') {
                 globalThis.dragging = this.order;
                 this.order.view.dispatchEvent(new CustomEvent('orderRejected', {bubbles: true}));
+            };
+            if (e.target.id=='slice') {
+                // globalThis.dragging = this.order;
+                // this.order.view.dispatchEvent(new CustomEvent('orderRejected', {bubbles: true}));
+                console.log('slice');
             }
         });
     }
