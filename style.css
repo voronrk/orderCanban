@@ -101,3 +101,11 @@ td, th {
     position:fixed;
     cursor:pointer;
 }
+
+.in-progress{
+    background-color:yellow;
+}
+
+.complete{
+    background-color:greenyellow;
+}

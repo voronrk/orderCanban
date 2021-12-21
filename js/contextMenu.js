@@ -5,7 +5,8 @@ export default class ContextMenu {
         items.innerHTML = `
             <div class="panel-block" id='reject'>Отменить операцию</div>
             <div class="panel-block" id='slice'>Разделить заказ</div>
-            <div class="panel-block" id='3'>111111</div>
+            <div class="panel-block" id='in-progress'>В работе</div>
+            <div class="panel-block" id='complete'>Готов</div>
         `;
         return items;
     }
@@ -35,7 +36,13 @@ export default class ContextMenu {
                 // globalThis.dragging = this.order;
                 // this.order.view.dispatchEvent(new CustomEvent('orderRejected', {bubbles: true}));
                 console.log('slice');
-            }
+            };
+            if (e.target.id=='in-progress') {
+                this.view.parentNode.classList.add('in-progress');
+            };
+            if (e.target.id=='complete') {
+                this.view.parentNode.classList.add('complete');
+            };
         });
     }
 }
