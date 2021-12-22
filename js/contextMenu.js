@@ -7,6 +7,7 @@ export default class ContextMenu {
             <div class="panel-block" id='slice'>Разделить заказ</div>
             <div class="panel-block" id='in-progress'>В работе</div>
             <div class="panel-block" id='complete'>Готов</div>
+            <div class="panel-block" id='warning'>Проблема</div>
         `;
         return items;
     }
@@ -39,9 +40,15 @@ export default class ContextMenu {
             };
             if (e.target.id=='in-progress') {
                 this.view.parentNode.classList.add('in-progress');
+                this.order.update({'status': 'in-progress'});
             };
             if (e.target.id=='complete') {
                 this.view.parentNode.classList.add('complete');
+                this.order.update({'status': 'complete'});
+            };
+            if (e.target.id=='warning') {
+                this.view.parentNode.classList.add('warning');
+                this.order.update({'status': 'warning'});
             };
         });
     }

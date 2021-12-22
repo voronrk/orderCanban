@@ -109,3 +109,6 @@ td, th {
 .complete{
     background-color:greenyellow;
 }
+.warning{
+    background-color:red;
+}

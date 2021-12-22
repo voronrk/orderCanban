@@ -64,5 +64,18 @@ export default class MainWrapper {
             this.hope.orders.initOrder(dragging.data);
             this.hope._render();
         })
+
+        window.addEventListener('beforeunload', function (e) {
+            alert('aaaaaaaaaaaaaaa');
+        });
+
+        // let ws = new WebSocket("ws://ordercanban/event");
+        //  // и навешивает на новый объект три колл-бека:
+        // // первый вызовется, когда соединение будет установлено:
+        // ws.onopen = function() { alert("Connection opened...") };
+        // // второй - когда соединено закроется
+        // // ws.onclose = function() { alert("Connection closed...") };
+        // // и, наконец, третий - каждый раз, когда браузер получает какие-то данные через веб-сокет
+        // ws.onmessage = function(e) { console.log(e.data);};
    }
 };
