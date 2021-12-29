@@ -1,0 +1,21 @@
+{
+    "name": "voron/websocket",
+    "description": "Websocket server",
+    "type": "project",
+    "require": {
+        "workerman/workerman": "dev-master"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Voron\\Websocket\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Roman Kononov",
+            "email": "voron_76@mail.ru"
+        }
+    ],
+    "minimum-stability": "dev"
+}

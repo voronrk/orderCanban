@@ -8,8 +8,8 @@ session_start();
     <title>График производства</title>
     
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"> -->
-    <link rel="stylesheet" href="bulma.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/bulma.min.css">
+    <link rel="stylesheet" href="css/style.css">
     
     <script type="module" src="js/script.js" defer></script>
 </head>

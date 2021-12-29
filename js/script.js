@@ -7,6 +7,9 @@ const clear = document.querySelector('#clear-base');
 const titles = ['№','Время','Заказчик','Параметры заказа', 'Дата'];
 let dragging = {};
 
+let user = Math.round(Math.random()*100000);
+export const socket = new WebSocket(`ws://ordercanban:1234/?user=u${user}`);
+
 function tabsDeactivate() {
     for (const tab of tabs) {tab.parentNode.classList.remove('is-active')};
 };
@@ -19,7 +22,10 @@ clear.addEventListener('click', () => {
         });
 })
 
-for (const tab of tabs) {
+socket.onopen = function(e) {
+  console.log("[open] Соединение установлено");
+  socket.send(user);
+  for (const tab of tabs) {
     tab.addEventListener('click', (e) => {
         e.preventDefault();
         tabsDeactivate();
@@ -27,5 +33,22 @@ for (const tab of tabs) {
         const machine = e.target.dataset.machine;
         const main = new MainWrapper(titles, machine);
     });
+    };
+};
+
+socket.onmessage = function(event) {
+  console.log(`[message] Данные получены с сервера: ${event.data}`);
+};
+
+socket.onclose = function(event) {
+  if (event.wasClean) {
+    console.log(`[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}`);
+  } else {
+    console.log('[close] Соединение прервано');
+  }
+};
+
+socket.onerror = function(error) {
+  console.log(`[error] ${error.message}`);
 };
 

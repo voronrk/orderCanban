@@ -1,4 +1,5 @@
 import ContextMenu from "./contextMenu.js";
+import {socket} from "./script.js";
 
 export default class OrderItem {
 
@@ -14,6 +15,7 @@ export default class OrderItem {
         };
         if (save) {this.save()};
         this.render();
+        socket.send(this.data['id']);
     };
 
     updateData(key, value) {
