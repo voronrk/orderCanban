@@ -51,7 +51,7 @@ export default class OrderItem {
             .then((res) => res.json())
             .then ((data) => {
                 //  console.log(data);
-         })
+        })
     }
 
     constructor(data={}) {
