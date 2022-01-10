@@ -1,4 +1,5 @@
 import Orders from "./Orders.js";
+import { dateForSave } from "./functions.js";
 
 export default class Day {
 
@@ -92,7 +93,8 @@ export default class Day {
               'Content-Type': 'application/json'
            },
            body: JSON.stringify({
-               date: this.date.toDateString(),
+            //    date: this.date.toDateString(),
+               date: dateForSave(this.date),
                machine: machine
             })
            })
@@ -111,7 +113,8 @@ export default class Day {
 
     _saveMaxHours() {
         const data = {
-            date: this.date.toDateString(),
+            // date: this.date.toDateString(),
+            date: dateForSave(this.date),
             machine: this.machine,
             hours: this.workHoursCountMax
         };

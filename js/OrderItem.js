@@ -1,5 +1,6 @@
 import ContextMenu from "./contextMenu.js";
 import {socket} from "./script.js";
+import { dateForSave } from "./functions.js";
 
 export default class OrderItem {
 
@@ -22,7 +23,9 @@ export default class OrderItem {
         if ((key=='prev') || (key=='next') || (key=='prevPart') || (key=='nextPart')) {
             this.data[key] = value ? value.data['id'] : null;
         } else if (key=='date') {
-            this.data[key] = value ? value.toDateString() : value;
+            // this.data[key] = value ? value.toDateString() : value;
+            this.data[key] = value ? dateForSave(value) : value;
+            console.log(this.data[key]);
         } else {
             this.data[key] = value;
         };
@@ -39,6 +42,8 @@ export default class OrderItem {
     };
 
     save() {
+        console.log("toSave");
+        console.log(this.data);
         fetch('/back/updateData.php', {
             method: 'POST',
             headers: {
