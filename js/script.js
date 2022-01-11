@@ -1,14 +1,12 @@
 'use sctrict';
 import MainWrapper from "./MainWrapper.js";
+import {socket} from "./socket.js";
 
 const tabs = document.querySelectorAll('#tabs>li>a');
 const clear = document.querySelector('#clear-base');
 
 const titles = ['№','Время','Заказчик','Параметры заказа', 'Дата'];
 let dragging = {};
-
-let user = Math.round(Math.random()*100000);
-export const socket = new WebSocket(`ws://ordercanban:1234/?user=u${user}`);
 
 function tabsDeactivate() {
     for (const tab of tabs) {tab.parentNode.classList.remove('is-active')};
@@ -24,7 +22,7 @@ clear.addEventListener('click', () => {
 
 socket.onopen = function(e) {
   console.log("[open] Соединение установлено");
-  socket.send(user);
+  // socket.send(user);
   for (const tab of tabs) {
     tab.addEventListener('click', (e) => {
         e.preventDefault();
@@ -36,9 +34,9 @@ socket.onopen = function(e) {
     };
 };
 
-socket.onmessage = function(event) {
-  console.log(`[message] Данные получены с сервера: ${event.data}`);
-};
+// socket.onmessage = function(event) {
+//   console.log(`[message] Данные получены с сервера: ${event.data}`);
+// };
 
 socket.onclose = function(event) {
   if (event.wasClean) {

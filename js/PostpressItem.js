@@ -19,6 +19,7 @@ export default class PostpressItem extends OrderItem {
     }
 
     render() {
+        super.render();
         this.view.innerHTML = `${this.orderNum}${this.duration}${this.customer}${this.options}${this.day}`;
     }
 

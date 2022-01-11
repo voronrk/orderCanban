@@ -1,5 +1,5 @@
 import ContextMenu from "./contextMenu.js";
-import {socket} from "./script.js";
+import {socket, user} from "./socket.js";
 import { dateForSave } from "./functions.js";
 
 export default class OrderItem {
@@ -16,16 +16,13 @@ export default class OrderItem {
         };
         if (save) {this.save()};
         this.render();
-        socket.send(this.data['id']);
     };
 
     updateData(key, value) {
         if ((key=='prev') || (key=='next') || (key=='prevPart') || (key=='nextPart')) {
             this.data[key] = value ? value.data['id'] : null;
         } else if (key=='date') {
-            // this.data[key] = value ? value.toDateString() : value;
             this.data[key] = value ? dateForSave(value) : value;
-            console.log(this.data[key]);
         } else {
             this.data[key] = value;
         };
@@ -42,8 +39,6 @@ export default class OrderItem {
     };
 
     save() {
-        console.log("toSave");
-        console.log(this.data);
         fetch('/back/updateData.php', {
             method: 'POST',
             headers: {
@@ -59,12 +54,17 @@ export default class OrderItem {
         })
     }
 
+    render() {
+        this.view.className = `columns order-row ${this.data['status']}`;
+        this.view.draggable = true;
+    }
+
     constructor(data={}) {
         this.data = data;
         this.view = document.createElement('div');
-        this.view.classList.add('columns','order-row');
-        if (this.data['status']) {this.view.classList.add(this.data['status']);}
-        this.view.draggable=true;
+        // this.view.classList.add('columns','order-row');
+        // if (this.data['status']) {this.view.classList.add(this.data['status']);}
+        // this.view.draggable=true;
 
         //=============for debug=================
         this.view.addEventListener('click', () => console.log(this));

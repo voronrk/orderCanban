@@ -19,6 +19,8 @@ export default class HopeItem extends OrderItem {
     }
 
     render() {
+        super.render();
+        this.view.className = `columns order-row`;
         this.view.innerHTML = `${this.orderNum}${this.duration}${this.customer}`;
     }
 

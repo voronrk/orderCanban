@@ -1,5 +1,7 @@
 import Orders from "./Orders.js";
 import HopeItem from "./HopeItem.js";
+import { socket, user } from "./socket.js";
+import {dataForSendToSocket} from "./functions.js";
 
 export default class Hope {
 
@@ -10,16 +12,45 @@ export default class Hope {
         });
     }
 
-    constructor(orders) {
-        this.orders = new Orders(orders, null, HopeItem);
+    _setOrders() {
+        fetch('/back/getData.php', {
+            method: 'POST', 
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                machine: this.machine
+            })
+            })
+            .then((res) => res.json())
+            .then ((data) => {
+                this.orders = new Orders(data['notplanned'], null, HopeItem);
+                this._render();
+            });
+    }
+
+    _reload() {
+        console.log('reloaded');
+        this._setOrders();
+    }
+
+    constructor(machine) {
+        this.machine = machine;
         this.view = document.createElement('div');
-        this._render();
+        this._setOrders();
 
         this.view.addEventListener('orderDeleted', (e) => {
             e.preventDefault();
             e.stopPropagation();
             this.orders.data.splice(this.orders.data.indexOf(e.detail),1);
-            this._render()
-         });
+            this._render();
+            socket.send(dataForSendToSocket(user, 0));
+        });
+
+        this.view.addEventListener('needReload', (e) => {
+            e.preventDefault();
+            console.log('catch on hope!');
+            this._reload();
+        });
     }
 }

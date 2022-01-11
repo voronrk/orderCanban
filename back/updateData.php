@@ -5,7 +5,7 @@ $params=json_decode(file_get_contents('php://input'),true);
 
 $data = $params['data'];
 
-$log = fopen('update.log', 'a');
+$log = fopen('update.log', 'w');
 fwrite($log, print_r($data,true));
 
 $result = db_query("UPDATE `operations` 

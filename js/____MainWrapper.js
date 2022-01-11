@@ -1,31 +1,41 @@
 import WorkArea from "./WorkArea.js";
 import Hope from "./Hope.js";
-import { socket, user } from "./socket.js";
-import {dataForSendToSocket, dateForSave} from "./functions.js";
 
 export default class MainWrapper {
 
-    render() {
-        this.view.innerHTML = '';
-        this.weeks.forEach((week) => {
-            this.view.appendChild(week.view);
-        });         
-    }
+   render() {
+      this.view.innerHTML = '';
+      this.weeks.forEach((week) => {
+         this.view.appendChild(week.view);
+      });         
+   }
 
-    renderWorkArea() {
+   renderWorkArea() {
         let startDate = new Date();
         startDate.setDate(new Date().getDate()-new Date().getDay()+1);
         startDate = new Date(startDate.toDateString());
-        this.workArea = new WorkArea(startDate, this.titles, this.machine);
-        this.workField.appendChild(this.workArea.view);
+        let workArea = new WorkArea(startDate, this.titles, this.machine);
+        this.workField.appendChild(workArea.view);
     }
 
-    renderHope() {
-        this.hope = new Hope(this.machine);
-        this.hopeField.appendChild(this.hope.view);
+   renderHope() {
+        fetch('/back/getData.php', {
+            method: 'POST', 
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                machine: this.machine
+            })
+            })
+            .then((res) => res.json())
+            .then ((data) => {
+                this.hope = new Hope(data['notplanned']);
+                this.hopeField.appendChild(this.hope.view);
+            });
     }
 
-    constructor(titles, machine) {
+     constructor(titles, machine) {
         this.workField = document.createElement('div');
         this.workField.classList.add('column', 'work-field');
         this.hopeField = document.createElement('div');
@@ -33,7 +43,7 @@ export default class MainWrapper {
 
         this.machine = machine;
         this.titles = titles;
-        
+       
         this.renderHope()
         this.renderWorkArea()
         
@@ -53,23 +63,12 @@ export default class MainWrapper {
             });
             this.hope.orders.initOrder(dragging.data);
             this.hope._render();
-            socket.send(dataForSendToSocket(user, 0));
         })
 
-        socket.onmessage = (e) => {
-            console.log(e.data);
-            if (e.data==0) {
-                this.hope._reload();
-            } else {
-                for (let week of this.workArea.weeks) {
-                    for (let day of week.days) {
-                        if (dateForSave(day.date)==e.data) {
-                            console.log(dateForSave(day.date));
-                            day._reload();
-                        };
-                    };
-                };
-            };
-        };
-    }
+        window.addEventListener('beforeunload', function (e) {
+            alert('aaaaaaaaaaaaaaa');
+        });
+
+        
+   }
 };

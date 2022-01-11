@@ -1,5 +1,6 @@
 import Orders from "./Orders.js";
-import { dateForSave } from "./functions.js";
+import { dateForSave, dataForSendToSocket } from "./functions.js";
+import { socket, user } from "./socket.js";
 
 export default class Day {
 
@@ -86,7 +87,8 @@ export default class Day {
         this.view.appendChild(this._tableFooter);
     }
 
-    setOrders(machine) {
+    setOrders() {
+        // console.log(dateForSave(this.date));
         fetch('/back/getData.php', {
            method: 'POST', 
            headers: {
@@ -95,7 +97,7 @@ export default class Day {
            body: JSON.stringify({
             //    date: this.date.toDateString(),
                date: dateForSave(this.date),
-               machine: machine
+               machine: this.machine
             })
            })
            .then((res) => res.json())
@@ -133,6 +135,11 @@ export default class Day {
          })
     }
 
+    _reload() {
+        console.log('reloaded');
+        this.setOrders();
+    }
+
     constructor(titles, dayOfWeek, date, orders, machine) {
         this.dayOfWeek = dayOfWeek;
         this.date = new Date(date);
@@ -141,12 +148,13 @@ export default class Day {
         this.view = document.createElement('div');
         this.view.classList.add('column', 'column-day');
 
-        this.setOrders(machine);
+        this.setOrders();
 
         //=========================debug=========================
         this.view.addEventListener('click', (e) => {
             if (e.target.classList.contains("head")) {
                 console.log(this);
+                this._reload();
             }
         })
         //=======================================================
@@ -158,6 +166,7 @@ export default class Day {
             let order = this.orders.initOrder(dragging.data);
             this.orders.insertBefore(order, e.detail);
             this._render()
+            socket.send(dataForSendToSocket(user, dateForSave(this.date)));
         });
 
         this.view.addEventListener('orderDeleted', (e) => {
@@ -165,7 +174,15 @@ export default class Day {
             e.stopPropagation();
             this.orders.data.splice(this.orders.data.indexOf(e.detail),1);
             this._render();
-         });
+            socket.send(dataForSendToSocket(user, dateForSave(this.date)));
+        });
+
+        // this.view.addEventListener('needReload', (e) => {
+        //     e.preventDefault();
+        //     // e.stopPropagation();
+        //     console.log('catch!');
+        //     this._reload();
+        // });
 
         this.view.addEventListener('dragover', (event)=> {
             event.preventDefault();
@@ -178,6 +195,8 @@ export default class Day {
             let order = this.orders.initOrder(dragging.data);
             this.orders.insertAfter(order, this.orders.tail);
             this._render();
+            socket.send(dataForSendToSocket(user, dateForSave(this.date)));
         });
+
     };
 }
