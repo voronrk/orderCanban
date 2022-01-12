@@ -24,6 +24,7 @@ export default class Day {
                 this.workHoursCountMax = inputField.value;
                 this._saveMaxHours();
                 this._render();
+                socket.send(dataForSendToSocket(user, dateForSave(this.date)));
                 e.stopPropagation();
             });
         });
@@ -88,14 +89,12 @@ export default class Day {
     }
 
     setOrders() {
-        // console.log(dateForSave(this.date));
         fetch('/back/getData.php', {
            method: 'POST', 
            headers: {
               'Content-Type': 'application/json'
            },
            body: JSON.stringify({
-            //    date: this.date.toDateString(),
                date: dateForSave(this.date),
                machine: this.machine
             })
@@ -115,7 +114,6 @@ export default class Day {
 
     _saveMaxHours() {
         const data = {
-            // date: this.date.toDateString(),
             date: dateForSave(this.date),
             machine: this.machine,
             hours: this.workHoursCountMax
@@ -136,8 +134,7 @@ export default class Day {
     }
 
     _reload() {
-        console.log('reloaded');
-        this.setOrders();
+        setTimeout(() => this.setOrders(), 500);        
     }
 
     constructor(titles, dayOfWeek, date, orders, machine) {
@@ -176,13 +173,6 @@ export default class Day {
             this._render();
             socket.send(dataForSendToSocket(user, dateForSave(this.date)));
         });
-
-        // this.view.addEventListener('needReload', (e) => {
-        //     e.preventDefault();
-        //     // e.stopPropagation();
-        //     console.log('catch!');
-        //     this._reload();
-        // });
 
         this.view.addEventListener('dragover', (event)=> {
             event.preventDefault();

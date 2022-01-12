@@ -22,39 +22,12 @@ export default class WorkArea {
       this.render();
    }
 
-   setOrders(machine) {
-      console.log(this.startDate);
-      fetch('/back/getData.php', {
-         method: 'POST', 
-         headers: {
-            'Content-Type': 'application/json'
-         },
-         body: JSON.stringify({
-             date: dateForSave(this.startDate),
-             machine: machine
-          })
-         })
-         .then((res) => res.json())
-         .then ((data) => {
-              if (data['maxhours']) {
-                  this.workHoursCountMax = data['maxhours']
-              } else {
-                  // this._saveMaxHours();
-              };
-            //   this.orders = new Orders(data['planned'], this.date);
-            //   this.orders.setLinks();
-            //   this._render();
-            console.log(data['planned']);
-      })
-  }
- 
    constructor(startDate, titles, machine) {
       this.machine = machine;
       this.startDate = startDate;
       this.titles = titles;
       this.view = document.createElement('div');
       this.orders = [];
-      // this.setOrders(this.machine);
       this._setWeeks(machine);
 
       document.addEventListener('wheel', (event) => {

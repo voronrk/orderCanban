@@ -42,22 +42,16 @@ export default class ContextMenu {
                 console.log('slice');
             };
             if (e.target.id=='in-progress') {
-                // console.log(user);
-                // console.log(dateForSave(this.order.date));
                 this.view.parentNode.classList.add('in-progress');
                 this.order.update({'status': 'in-progress'});
                 socket.send(dataForSendToSocket(user, dateForSave(this.order.date)));
             };
             if (e.target.id=='complete') {
-                // console.log(user);
-                // console.log(dateForSave(this.order.date));
                 this.view.parentNode.classList.add('complete');
                 this.order.update({'status': 'complete'});
                 socket.send(dataForSendToSocket(user, dateForSave(this.order.date)));
             };
             if (e.target.id=='warning') {
-                // console.log(user);
-                // console.log(dateForSave(this.order.date));
                 this.view.parentNode.classList.add('warning');
                 this.order.update({'status': 'warning'});
                 socket.send(dataForSendToSocket(user, dateForSave(this.order.date)));

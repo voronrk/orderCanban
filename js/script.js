@@ -22,7 +22,6 @@ clear.addEventListener('click', () => {
 
 socket.onopen = function(e) {
   console.log("[open] Соединение установлено");
-  // socket.send(user);
   for (const tab of tabs) {
     tab.addEventListener('click', (e) => {
         e.preventDefault();

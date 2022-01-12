@@ -30,8 +30,7 @@ export default class Hope {
     }
 
     _reload() {
-        console.log('reloaded');
-        this._setOrders();
+        setTimeout(() => this._setOrders(), 500);
     }
 
     constructor(machine) {
@@ -49,7 +48,6 @@ export default class Hope {
 
         this.view.addEventListener('needReload', (e) => {
             e.preventDefault();
-            console.log('catch on hope!');
             this._reload();
         });
     }

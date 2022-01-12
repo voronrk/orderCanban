@@ -62,9 +62,6 @@ export default class OrderItem {
     constructor(data={}) {
         this.data = data;
         this.view = document.createElement('div');
-        // this.view.classList.add('columns','order-row');
-        // if (this.data['status']) {this.view.classList.add(this.data['status']);}
-        // this.view.draggable=true;
 
         //=============for debug=================
         this.view.addEventListener('click', () => console.log(this));

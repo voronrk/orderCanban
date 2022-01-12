@@ -54,8 +54,6 @@ session_start();
     </ul>
 </div>
 <div class="columns" id="main-wrapper">
-    <!-- <div class="column is-1" id="hope-field"></div>
-    <div class="column" id="work-field"></div> -->
 </div>
 
 </body>
